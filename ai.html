@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login – Nano AI</title>
+<style>
+body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+input { width: 60%; padding: 10px; margin: 10px 0; }
+button { padding: 10px 20px; }
+</style>
+</head>
+<body>
+
+<h1>Login</h1>
+<input type="text" id="username" placeholder="Benutzername">
+<br>
+<input type="password" id="password" placeholder="Passwort">
+<br>
+<button onclick="login()">Login</button>
+<p id="message"></p>
+
+<script>
+async function login() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    if(!username || !password) return alert("Bitte beide Felder ausfüllen!");
+
+    const res = await fetch("/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({username, password})
+    });
+
+    const data = await res.json();
+    document.getElementById("message").innerText = data.message;
+    if(data.success) window.location.href = "ai.html";
+}
+</script>
+
+</body>
+</html>
