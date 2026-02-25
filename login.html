@@ -21,12 +21,14 @@ button { padding: 10px 20px; }
 <p id="message"></p>
 
 <script>
+const API_URL = "https://DEIN_NGROK_URL"; // hier ngrok URL einsetzen
+
 async function login() {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
     if(!username || !password) return alert("Bitte beide Felder ausfüllen!");
 
-    const res = await fetch("/login", {
+    const res = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({username, password})
