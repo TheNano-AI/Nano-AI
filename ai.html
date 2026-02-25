@@ -20,6 +20,8 @@ p { width: 80%; margin: 20px auto; padding: 10px; border: 1px solid #ccc; min-he
 <p id="response">Antwort erscheint hier…</p>
 
 <script>
+const API_URL = "https://DEIN_NGROK_URL"; // hier ngrok URL einsetzen
+
 async function sendPrompt() {
     const prompt = document.getElementById("prompt").value.trim();
     if(!prompt) return;
@@ -27,7 +29,7 @@ async function sendPrompt() {
     document.getElementById("response").innerText = "…wird generiert…";
 
     try {
-        const res = await fetch("/generate", {
+        const res = await fetch(`${API_URL}/generate`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({prompt})
