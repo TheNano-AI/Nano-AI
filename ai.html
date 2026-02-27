@@ -3,17 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nano AI Pro</title>
+<title>Nano AI</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
 body{display:flex;height:100vh;background:#0f172a;color:white;overflow:hidden;}
 
 /* SIDEBAR */
-.sidebar{width:280px;background:#111827;display:flex;flex-direction:column;padding:20px;}
+.sidebar{width:300px;background:#111827;display:flex;flex-direction:column;padding:20px;}
 .logo{display:flex;align-items:center;margin-bottom:20px;}
 .logo img{height:50px;width:50px;object-fit:contain;border-radius:12px;margin-right:10px;}
 .logo span{font-size:22px;font-weight:bold;}
-.new-chat{padding:12px;background:#2563eb;border:none;color:white;border-radius:14px;cursor:pointer;margin-bottom:15px;font-weight:bold;}
+.new-chat{padding:12px;background:#2563eb;border:none;color:white;border-radius:14px;cursor:pointer;margin-bottom:15px;font-weight:bold;transition:0.2s;}
+.new-chat:hover{background:#1e40af;}
 .chat-list{flex:1;overflow-y:auto;}
 .chat-item{padding:10px;background:#1f2937;border-radius:12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:0.2s;}
 .chat-item:hover{background:#374151;}
@@ -31,10 +32,10 @@ body{display:flex;height:100vh;background:#0f172a;color:white;overflow:hidden;}
 .dropdown select{appearance:none;}
 
 /* CHAT */
-.chat{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;}
-.message{margin-bottom:15px;padding:12px;border-radius:14px;word-wrap:break-word;max-width:70%;line-height:1.5;}
+.chat{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+.message{padding:12px;border-radius:14px;word-wrap:break-word;max-width:70%;line-height:1.5;position:relative;}
 .user{text-align:right;color:#60a5fa;background:rgba(96,165,250,0.15);align-self:flex-end;}
-.ai{text-align:left;color:#22c55e;background:rgba(34,197,94,0.15);align-self:flex-start;position:relative;}
+.ai{text-align:left;color:#22c55e;background:rgba(34,197,94,0.15);align-self:flex-start;}
 .ai .dots{display:inline-block;margin-left:5px;}
 .dot{height:6px;width:6px;background:white;border-radius:50%;display:inline-block;margin:0 2px;animation:blink 1s infinite;}
 @keyframes blink{0%,80%,100%{opacity:0.2;}40%{opacity:1;}}
@@ -49,7 +50,10 @@ input{flex:1;padding:12px;border-radius:14px;border:none;outline:none;background
 #loginScreen{position:absolute;inset:0;background:#0f172a;display:flex;justify-content:center;align-items:center;z-index:10;}
 .login-box{background:#111827;padding:40px;border-radius:12px;width:320px;display:flex;flex-direction:column;align-items:center;}
 .login-box input{width:100%;padding:10px;margin-bottom:10px;border:none;border-radius:12px;background:#1f2937;color:white;}
-.login-box button{width:100%;padding:10px;border:none;border-radius:12px;background:#2563eb;color:white;cursor:pointer;margin-bottom:5px;font-weight:bold;}
+.login-box button{width:100%;padding:10px;border:none;border-radius:12px;background:#2563eb;color:white;cursor:pointer;margin-bottom:5px;font-weight:bold;transition:0.2s;}
+.login-box button:hover{background:#1e40af;}
+.edit-btn{position:absolute;top:0;right:0;background:#2563eb;border:none;color:white;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:14px;text-align:center;line-height:22px;}
+.edit-btn:hover{background:#1e40af;}
 </style>
 </head>
 <body>
@@ -57,7 +61,7 @@ input{flex:1;padding:12px;border-radius:14px;border:none;outline:none;background
 <!-- LOGIN -->
 <div id="loginScreen">
     <div class="login-box">
-        <h2>Nano AI Pro Login</h2>
+        <h2>Nano AI Login</h2>
         <input id="username" placeholder="Username">
         <input id="password" type="password" placeholder="Passwort">
         <button onclick="login()">Login</button>
@@ -104,100 +108,62 @@ input{flex:1;padding:12px;border-radius:14px;border:none;outline:none;background
 </div>
 
 <script>
-const API_URL="https://unexempt-predenial-aryanna.ngrok-free.dev"; // AI Backend
-const CHAT_API="/chats"; // placeholder für persistente Chat Speicherung
-
+const API_URL="https://unexempt-predenial-aryanna.ngrok-free.dev";
 let users=JSON.parse(localStorage.getItem("nano_users"))||{};
 let currentUser=localStorage.getItem("nano_currentUser");
 let currentChat=null;
 let currentLanguage=localStorage.getItem("nano_language")||"de";
 
-// Language
-function changeLanguage(){
-    currentLanguage=document.getElementById("languageSelect").value;
-    localStorage.setItem("nano_language",currentLanguage);
-    // alert("Sprache geändert: "+currentLanguage);
-}
+// Sprachwahl
+function changeLanguage(){currentLanguage=document.getElementById("languageSelect").value;localStorage.setItem("nano_language",currentLanguage);}
 
 // Dropdown
-function toggleDropdown(){
-    const d=document.getElementById("dropdown");
-    d.style.display=d.style.display==="flex"?"none":"flex";
-}
+function toggleDropdown(){const d=document.getElementById("dropdown");d.style.display=d.style.display==="flex"?"none":"flex";}
 
-// LOGIN
+// Login/Register
 function saveUsers(){localStorage.setItem("nano_users",JSON.stringify(users));}
 function register(){const u=username.value.trim();const p=password.value.trim();if(!u||!p)return alert("Felder ausfüllen");if(users[u])return alert("User existiert");users[u]={password:p,chats:{}};saveUsers();alert("Registriert!");}
 function login(){const u=username.value.trim();const p=password.value.trim();if(!users[u]||users[u].password!==p)return alert("Falsche Daten");currentUser=u;localStorage.setItem("nano_currentUser",u);startApp();}
 function logout(){localStorage.removeItem("nano_currentUser");location.reload();}
 
-// CHATS
-function createChat(){
-    const id=Date.now();
-    users[currentUser].chats[id]={name:"Neuer Chat",messages:[]};
-    currentChat=id;
-    saveUsers();
-    renderChats();
-    renderMessages();
-}
-
-function renameChat(id){
-    const name=prompt("Neuer Name:");
-    if(name) users[currentUser].chats[id].name=name;
-    saveUsers();
-    renderChats();
-}
-
-function deleteChat(id){
-    if(!confirm("Chat löschen?")) return;
-    delete users[currentUser].chats[id];
-    currentChat=null;
-    saveUsers();
-    renderChats();
-    document.getElementById("chat").innerHTML="";
-}
-
-function selectChat(id){
-    currentChat=id;
-    renderChats();
-    renderMessages();
-}
+// Chats
+function createChat(){const id=Date.now();users[currentUser].chats[id]={name:"Neuer Chat",messages:[]};currentChat=id;saveUsers();renderChats();renderMessages();}
+function renameChat(id){const name=prompt("Neuer Name:");if(name) users[currentUser].chats[id].name=name;saveUsers();renderChats();}
+function deleteChat(id){if(!confirm("Chat löschen?"))return;delete users[currentUser].chats[id];currentChat=null;saveUsers();renderChats();document.getElementById("chat").innerHTML="";}
+function selectChat(id){currentChat=id;renderChats();renderMessages();}
 
 function renderChats(){
     const list=document.getElementById("chatList");
     list.innerHTML="";
-    if(!currentUser) return;
+    if(!currentUser)return;
     const chats=users[currentUser].chats;
     for(let id in chats){
-        const div=document.createElement("div");
-        div.className="chat-item";
-        if(id===currentChat) div.classList.add("active");
-        const title=document.createElement("span");
-        title.innerText=chats[id].name;
-        title.onclick=()=>selectChat(id);
-        const actions=document.createElement("div");
-        actions.className="chat-actions";
-        const renameBtn=document.createElement("button");renameBtn.innerText="✏";renameBtn.onclick=(e)=>{e.stopPropagation();renameChat(id)};
-        const deleteBtn=document.createElement("button");deleteBtn.innerText="🗑";deleteBtn.onclick=(e)=>{e.stopPropagation();deleteChat(id)};
+        const div=document.createElement("div");div.className="chat-item";if(id===currentChat)div.classList.add("active");
+        const title=document.createElement("span");title.innerText=chats[id].name;title.onclick=()=>selectChat(id);
+        const actions=document.createElement("div");actions.className="chat-actions";
+        const renameBtn=document.createElement("button");renameBtn.innerText="✏";renameBtn.onclick=e=>{e.stopPropagation();renameChat(id);}
+        const deleteBtn=document.createElement("button");deleteBtn.innerText="🗑";deleteBtn.onclick=e=>{e.stopPropagation();deleteChat(id);}
         actions.append(renameBtn,deleteBtn);
-        div.append(title,actions);
-        list.appendChild(div);
+        div.append(title,actions);list.appendChild(div);
     }
 }
 
 function renderMessages(){
-    const chatDiv=document.getElementById("chat");
-    chatDiv.innerHTML="";
-    if(!currentChat) return;
+    const chatDiv=document.getElementById("chat");chatDiv.innerHTML="";
+    if(!currentChat)return;
     users[currentUser].chats[currentChat].messages.forEach(m=>{
-        const div=document.createElement("div");
-        div.className="message "+(m.role==="ai"?"ai":"user");
+        const div=document.createElement("div");div.className="message "+(m.role==="ai"?"ai":"user");
         div.innerText=m.text;
+        // Edit button
+        if(m.role==="user"){
+            const editBtn=document.createElement("button");editBtn.className="edit-btn";editBtn.innerText="✏";editBtn.onclick=()=>{const newText=prompt("Nachricht bearbeiten:",m.text);if(newText){m.text=newText;saveUsers();renderMessages();}};
+            div.appendChild(editBtn);
+        }
         chatDiv.appendChild(div);
     });
 }
 
-// AI Typing mit Punkten
+// AI Typing
 function typeText(container,text){
     container.innerText="";
     let i=0;
@@ -209,53 +175,21 @@ function typeText(container,text){
     },25);
 }
 
+// Nachricht senden
 function sendPrompt(){
-    const input=document.getElementById("prompt");
-    const text=input.value.trim();
-    if(!text||!currentChat) return;
-
-    // User Message
-    users[currentUser].chats[currentChat].messages.push({role:"user",text});
-    renderMessages();
-    input.value="";
-
-    // AI placeholder
-    const chatDiv=document.getElementById("chat");
-    const botDiv=document.createElement("div");
-    botDiv.className="message ai";
-    const dots=document.createElement("span");dots.className="dots";
-    for(let d=0;d<3;d++){const dot=document.createElement("span");dot.className="dot";dots.appendChild(dot);}
-    botDiv.appendChild(dots);
-    chatDiv.appendChild(botDiv);
-    chatDiv.scrollTop=chatDiv.scrollHeight;
-
-    // Fetch AI
-    fetch(API_URL,{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({prompt:text,language:currentLanguage})
-    })
-    .then(res=>res.json())
-    .then(data=>{
-        botDiv.removeChild(dots);
-        typeText(botDiv,data.text);
-        users[currentUser].chats[currentChat].messages.push({role:"ai",text:data.text});
-        saveUsers();
-    })
+    const input=document.getElementById("prompt");const text=input.value.trim();if(!text||!currentChat)return;
+    users[currentUser].chats[currentChat].messages.push({role:"user",text});renderMessages();input.value="";
+    const chatDiv=document.getElementById("chat");const botDiv=document.createElement("div");botDiv.className="message ai";
+    const dots=document.createElement("span");dots.className="dots";for(let d=0;d<3;d++){const dot=document.createElement("span");dot.className="dot";dots.appendChild(dot);}
+    botDiv.appendChild(dots);chatDiv.appendChild(botDiv);chatDiv.scrollTop=chatDiv.scrollHeight;
+    fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:text,language:currentLanguage})})
+    .then(res=>res.json()).then(data=>{botDiv.removeChild(dots);typeText(botDiv,data.text);users[currentUser].chats[currentChat].messages.push({role:"ai",text:data.text});saveUsers();})
     .catch(()=>{botDiv.innerText="Fehler beim Server";});
 }
 
 // Start App
-function startApp(){
-    loginScreen.style.display="none";
-    profileName.innerText=currentUser;
-    document.getElementById("languageSelect").value=currentLanguage;
-    renderChats();
-    renderMessages();
-}
-
-if(currentUser) startApp();
-else loginScreen.style.display="flex";
+function startApp(){loginScreen.style.display="none";profileName.innerText=currentUser;document.getElementById("languageSelect").value=currentLanguage;renderChats();renderMessages();}
+if(currentUser)startApp();else loginScreen.style.display="flex";
 </script>
 </body>
 </html>
