@@ -6,98 +6,97 @@
 <title>Nano AI</title>
 
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-    display:flex;
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    font-family:system-ui;
     height:100vh;
-    font-family: system-ui, sans-serif;
+    display:flex;
     background:#0f172a;
     color:white;
 }
 
 /* SIDEBAR */
-.sidebar {
-    width:260px;
+.sidebar{
+    width:270px;
     background:#111827;
+    padding:20px;
     display:flex;
     flex-direction:column;
-    padding:20px;
 }
 
-.sidebar h1 {
+.logo{
     font-size:18px;
+    font-weight:600;
     margin-bottom:20px;
 }
 
-.new-chat {
+.new-chat{
     padding:10px;
-    background:#2563eb;
     border:none;
     border-radius:8px;
+    background:#2563eb;
     color:white;
     cursor:pointer;
     margin-bottom:20px;
 }
 
-.chat-list {
+.chat-list{
     flex:1;
     overflow-y:auto;
 }
 
-.chat-item {
+.chat-item{
     padding:10px;
     border-radius:6px;
     margin-bottom:8px;
-    cursor:pointer;
     background:#1f2937;
+    cursor:pointer;
 }
 
-.chat-item:hover {
-    background:#374151;
+.chat-item.active{
+    background:#2563eb;
 }
 
-/* CHAT AREA */
-.chat-area {
+/* CHAT */
+.chat-area{
     flex:1;
     display:flex;
     flex-direction:column;
 }
 
-.messages {
+.messages{
     flex:1;
-    overflow-y:auto;
     padding:40px;
+    overflow-y:auto;
     display:flex;
     flex-direction:column;
+    gap:15px;
 }
 
-.message {
+.message{
     max-width:60%;
     padding:14px;
-    margin-bottom:15px;
     border-radius:14px;
     line-height:1.4;
 }
 
-.user {
+.user{
     align-self:flex-end;
     background:#2563eb;
 }
 
-.bot {
+.bot{
     align-self:flex-start;
     background:#1f2937;
 }
 
-/* INPUT */
-.input-area {
+.input-area{
     padding:20px;
     background:#111827;
     display:flex;
 }
 
-.input-area input {
+.input-area input{
     flex:1;
     padding:14px;
     border:none;
@@ -105,7 +104,7 @@ body {
     outline:none;
 }
 
-.input-area button {
+.input-area button{
     margin-left:10px;
     padding:14px 20px;
     border:none;
@@ -120,7 +119,7 @@ body {
 <body>
 
 <div class="sidebar">
-    <h1>Nano AI</h1>
+    <div class="logo">Nano AI</div>
     <button class="new-chat" onclick="createChat()">+ Neuer Chat</button>
     <div class="chat-list" id="chatList"></div>
 </div>
@@ -128,102 +127,119 @@ body {
 <div class="chat-area">
     <div class="messages" id="messages"></div>
     <div class="input-area">
-        <input type="text" id="prompt" placeholder="Nachricht schreiben..." onkeydown="if(event.key==='Enter') sendPrompt()">
+        <input id="prompt" placeholder="Nachricht schreiben..."
+        onkeydown="if(event.key==='Enter') sendPrompt()">
         <button onclick="sendPrompt()">Senden</button>
     </div>
 </div>
 
 <script>
 
-const API_URL = "https://unexempt-predenial-aryanna.ngrok-free.dev"; // z.B. https://deinserver.com/generate
+const API_URL = "https://unexempt-predenial-aryanna.ngrok-free.dev/generate";
 
 let chats = JSON.parse(localStorage.getItem("nano_chats")) || {};
-let currentChat = null;
+let currentChat = localStorage.getItem("nano_currentChat") || null;
 
-/* CHAT ERSTELLEN */
-function createChat() {
-    const id = Date.now();
-    chats[id] = [];
+/* -------- CHAT SYSTEM -------- */
+
+function saveData(){
+    localStorage.setItem("nano_chats", JSON.stringify(chats));
+    localStorage.setItem("nano_currentChat", currentChat);
+}
+
+function createChat(){
+    const id = Date.now().toString();
+    chats[id] = {
+        title: "Chat " + (Object.keys(chats).length + 1),
+        messages: []
+    };
     currentChat = id;
-    saveChats();
+    saveData();
     renderChats();
     loadChat(id);
 }
 
-/* CHATS SPEICHERN */
-function saveChats() {
-    localStorage.setItem("nano_chats", JSON.stringify(chats));
-}
-
-/* SIDEBAR RENDERN */
-function renderChats() {
+function renderChats(){
     const list = document.getElementById("chatList");
     list.innerHTML = "";
-    Object.keys(chats).forEach(id => {
+
+    Object.keys(chats).forEach(id=>{
         const div = document.createElement("div");
         div.className = "chat-item";
-        div.innerText = "Chat " + id;
-        div.onclick = () => loadChat(id);
+        if(id === currentChat) div.classList.add("active");
+
+        div.innerText = chats[id].title;
+        div.onclick = ()=> loadChat(id);
         list.appendChild(div);
     });
 }
 
-/* CHAT LADEN */
-function loadChat(id) {
+function loadChat(id){
     currentChat = id;
-    const messagesDiv = document.getElementById("messages");
-    messagesDiv.innerHTML = "";
-    chats[id].forEach(msg => {
+    saveData();
+    renderChats();
+
+    const container = document.getElementById("messages");
+    container.innerHTML = "";
+
+    chats[id].messages.forEach(msg=>{
         addMessage(msg.text, msg.role, false);
     });
 }
 
-/* MESSAGE HINZUFÜGEN */
-function addMessage(text, role, save=true) {
+function addMessage(text, role, save=true){
     const div = document.createElement("div");
     div.className = "message " + role;
     div.innerText = text;
     document.getElementById("messages").appendChild(div);
-    div.scrollIntoView();
+    div.scrollIntoView({behavior:"smooth"});
 
-    if(save && currentChat) {
-        chats[currentChat].push({text, role});
-        saveChats();
+    if(save && currentChat){
+        chats[currentChat].messages.push({text, role});
+        saveData();
     }
 }
 
-/* SENDEN */
-async function sendPrompt() {
+/* -------- SENDEN -------- */
+
+async function sendPrompt(){
     const input = document.getElementById("prompt");
     const prompt = input.value.trim();
     if(!prompt || !currentChat) return;
 
-    addMessage(prompt, "user");
-    input.value = "";
+    addMessage(prompt,"user");
+    input.value="";
 
-    addMessage("...", "bot");
+    const loading = document.createElement("div");
+    loading.className="message bot";
+    loading.innerText="...";
+    document.getElementById("messages").appendChild(loading);
 
-    try {
-        const res = await fetch(API_URL, {
-            method: "POST",
-            headers: {"Content-Type":"application/json"},
-            body: JSON.stringify({prompt})
+    try{
+        const res = await fetch(API_URL,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({prompt})
         });
 
         const data = await res.json();
 
-        document.querySelector(".messages").lastChild.remove();
-        addMessage(data.text, "bot");
+        loading.remove();
+        addMessage(data.text,"bot");
 
-    } catch(err) {
-        document.querySelector(".messages").lastChild.remove();
-        addMessage("Server nicht erreichbar", "bot");
+    }catch{
+        loading.innerText="Server nicht erreichbar";
     }
 }
 
-/* START */
-renderChats();
-createChat();
+/* -------- START -------- */
+
+if(!currentChat){
+    createChat();
+}else{
+    renderChats();
+    loadChat(currentChat);
+}
 
 </script>
 
