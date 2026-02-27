@@ -4,16 +4,142 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nano AI</title>
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-    font-family:system-ui;
-    height:100vh;
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
+body{display:flex;height:100vh;background:#0f172a;color:white;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{
+    width:260px;
+    background:#111827;
     display:flex;
-    background:#0f172a;
-    color:white;
+    flex-direction:column;
+    padding:15px;
 }
+.logo{
+    display:flex;
+    align-items:center;
+    margin-bottom:20px;
+}
+.logo img{
+    height:50px;
+    width:50px;
+    object-fit:contain;
+    border-radius:12px;
+    margin-right:10px;
+}
+.logo span{font-size:20px;font-weight:bold;}
+.new-chat{
+    padding:10px;
+    background:#2563eb;
+    border:none;
+    color:white;
+    border-radius:12px;
+    cursor:pointer;
+    margin-bottom:15px;
+}
+.chat-list{flex:1;overflow-y:auto;}
+.chat-item{
+    padding:8px;
+    background:#1f2937;
+    border-radius:12px;
+    margin-bottom:8px;
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    transition:0.2s;
+}
+.chat-item:hover{background:#374151;}
+.chat-item.active{background:#2563eb;}
+.chat-actions button{
+    background:none;
+    border:none;
+    color:#aaa;
+    cursor:pointer;
+    font-size:14px;
+}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;}
+
+/* TOP BAR */
+.topbar{
+    height:60px;
+    background:#111827;
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    padding:0 20px;
+    position:relative;
+}
+.profile{
+    cursor:pointer;
+    background:#2563eb;
+    padding:8px 14px;
+    border-radius:20px;
+    user-select:none;
+}
+.dropdown{
+    position:absolute;
+    top:60px;
+    right:20px;
+    background:#1f2937;
+    padding:10px;
+    border-radius:12px;
+    display:none;
+    width:200px;
+    flex-direction:column;
+}
+.dropdown button,
+.dropdown select{
+    width:100%;
+    margin:5px 0;
+    padding:8px;
+    background:#374151;
+    color:white;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+}
+.dropdown select{appearance:none;}
+
+/* CHAT */
+.chat{flex:1;padding:20px;overflow-y:auto;}
+.message{
+    margin-bottom:15px;
+    max-width:70%;
+    padding:10px;
+    border-radius:12px;
+    word-wrap:break-word;
+}
+.user{text-align:right;color:#60a5fa;background:rgba(96,165,250,0.1);padding:8px;}
+.ai{text-align:left;color:#22c55e;background:rgba(34,197,94,0.1);padding:8px;}
+
+/* INPUT */
+.input-area{
+    display:flex;
+    padding:15px;
+    background:#111827;
+}
+input{
+    flex:1;
+    padding:10px;
+    border-radius:12px;
+    border:none;
+    outline:none;
+}
+.send-btn{
+    margin-left:10px;
+    padding:10px 20px;
+    background:#2563eb;
+    border:none;
+    color:white;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.2s;
+}
+.send-btn:hover{background:#1e40af;}
 
 /* LOGIN SCREEN */
 #loginScreen{
@@ -23,121 +149,33 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
+    z-index:10;
 }
-
 .login-box{
     background:#111827;
     padding:40px;
     border-radius:12px;
     width:300px;
 }
-
 .login-box input{
     width:100%;
     padding:10px;
     margin-bottom:10px;
     border:none;
-    border-radius:6px;
+    border-radius:12px;
 }
-
 .login-box button{
     width:100%;
     padding:10px;
     border:none;
-    border-radius:6px;
+    border-radius:12px;
     background:#2563eb;
     color:white;
     cursor:pointer;
     margin-bottom:5px;
 }
-
-/* SIDEBAR */
-.sidebar{
-    width:270px;
-    background:#111827;
-    padding:20px;
-    display:flex;
-    flex-direction:column;
-}
-
-.logo{
-    font-weight:600;
-    margin-bottom:20px;
-}
-
-.chat-list{
-    flex:1;
-    overflow-y:auto;
-}
-
-.chat-item{
-    padding:10px;
-    border-radius:6px;
-    margin-bottom:8px;
-    background:#1f2937;
-    cursor:pointer;
-}
-
-.chat-item.active{
-    background:#2563eb;
-}
-
-/* CHAT */
-.chat-area{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-}
-
-.messages{
-    flex:1;
-    padding:40px;
-    overflow-y:auto;
-    display:flex;
-    flex-direction:column;
-    gap:15px;
-}
-
-.message{
-    max-width:60%;
-    padding:14px;
-    border-radius:14px;
-}
-
-.user{
-    align-self:flex-end;
-    background:#2563eb;
-}
-
-.bot{
-    align-self:flex-start;
-    background:#1f2937;
-}
-
-.input-area{
-    padding:20px;
-    background:#111827;
-    display:flex;
-}
-
-.input-area input{
-    flex:1;
-    padding:14px;
-    border:none;
-    border-radius:8px;
-}
-
-.input-area button{
-    margin-left:10px;
-    padding:14px 20px;
-    border:none;
-    border-radius:8px;
-    background:#2563eb;
-    color:white;
-}
 </style>
 </head>
-
 <body>
 
 <!-- LOGIN -->
@@ -151,169 +189,88 @@ body{
     </div>
 </div>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
-    <div class="logo">Nano AI</div>
-    <button onclick="createChat()">+ Neuer Chat</button>
-    <button onclick="logout()" style="margin-top:10px;background:#ef4444;">Logout</button>
+    <div class="logo">
+        <img src="NanoAI.png" alt="Nano AI Logo">
+        <span>Nano AI</span>
+    </div>
+    <button class="new-chat" onclick="createChat()">+ Neuer Chat</button>
     <div class="chat-list" id="chatList"></div>
 </div>
 
-<div class="chat-area">
-    <div class="messages" id="messages"></div>
+<!-- MAIN AREA -->
+<div class="main">
+    <div class="topbar">
+        <div class="profile" onclick="toggleDropdown()" id="profileName">Profil</div>
+        <div class="dropdown" id="dropdown">
+            <button onclick="alert('Profilseite kommt noch')">Profil</button>
+            <select id="languageSelect" onchange="changeLanguage()">
+                <option value="de">Deutsch</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+                <option value="it">Italiano</option>
+                <option value="ru">Русский</option>
+                <option value="tr">Türkçe</option>
+                <option value="pl">Polski</option>
+                <option value="nl">Nederlands</option>
+                <option value="pt">Português</option>
+            </select>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+    <div class="chat" id="chat"></div>
     <div class="input-area">
-        <input id="prompt" placeholder="Nachricht..."
-        onkeydown="if(event.key==='Enter') sendPrompt()">
-        <button onclick="sendPrompt()">Senden</button>
+        <input type="text" id="prompt" placeholder="Nachricht schreiben..." onkeydown="if(event.key==='Enter') sendPrompt()">
+        <button class="send-btn" onclick="sendPrompt()">Senden</button>
     </div>
 </div>
 
 <script>
+const API_URL="https://unexempt-predenial-aryanna.ngrok-free.dev";
 
-const API_URL = "https://unexempt-predenial-aryanna.ngrok-free.dev/generate";
+let users=JSON.parse(localStorage.getItem("nano_users"))||{};
+let currentUser=localStorage.getItem("nano_currentUser");
+let currentChat=null;
+let currentLanguage="de";
 
-let users = JSON.parse(localStorage.getItem("nano_users")) || {};
-let currentUser = localStorage.getItem("nano_currentUser");
-let currentChat = null;
+// Login / Register
+function saveUsers(){localStorage.setItem("nano_users",JSON.stringify(users));}
+function register(){const u=username.value.trim();const p=password.value.trim();if(!u||!p) return alert("Felder ausfüllen");if(users[u]) return alert("User existiert");users[u]={password:p,chats:{}};saveUsers();alert("Registriert!");}
+function login(){const u=username.value.trim();const p=password.value.trim();if(!users[u]||users[u].password!==p) return alert("Falsche Daten");currentUser=u;localStorage.setItem("nano_currentUser",u);startApp();}
+function logout(){localStorage.removeItem("nano_currentUser");location.reload();}
+function toggleDropdown(){const d=document.getElementById("dropdown");d.style.display=d.style.display==="flex"?"none":"flex";}
+function changeLanguage(){currentLanguage=document.getElementById("languageSelect").value;alert("Sprache: "+currentLanguage);}
 
-/* ---------- LOGIN SYSTEM ---------- */
+// Chats
+function createChat(){const id=Date.now();users[currentUser].chats[id]={name:"Neuer Chat",messages:[]};currentChat=id;saveUsers();renderChats();renderMessages();}
+function renameChat(id){const name=prompt("Neuer Name:");if(name) users[currentUser].chats[id].name=name;renderChats();}
+function deleteChat(id){if(!confirm("Chat löschen?")) return;delete users[currentUser].chats[id];currentChat=null;renderChats();document.getElementById("chat").innerHTML="";}
+function renderChats(){const list=document.getElementById("chatList");list.innerHTML="";if(!currentUser) return;const chats=users[currentUser].chats;for(let id in chats){const div=document.createElement("div");div.className="chat-item";if(id===currentChat) div.classList.add("active");const title=document.createElement("span");title.innerText=chats[id].name;title.onclick=()=>{currentChat=id;renderMessages();renderChats();};const actions=document.createElement("div");actions.className="chat-actions";const renameBtn=document.createElement("button");renameBtn.innerText="✏";renameBtn.onclick=(e)=>{e.stopPropagation();renameChat(id)};const deleteBtn=document.createElement("button");deleteBtn.innerText="🗑";deleteBtn.onclick=(e)=>{e.stopPropagation();deleteChat(id)};actions.append(renameBtn,deleteBtn);div.append(title,actions);list.appendChild(div);}}
+function renderMessages(){const chatDiv=document.getElementById("chat");chatDiv.innerHTML="";if(!currentChat) return;users[currentUser].chats[currentChat].messages.forEach(m=>{const div=document.createElement("div");div.className="message "+(m.role==="ai"?"ai":"user");div.innerText=m.text;chatDiv.appendChild(div);});}
 
-function saveUsers(){
-    localStorage.setItem("nano_users", JSON.stringify(users));
-}
+// AI Typing
+function typeText(container,text){container.innerText="";let i=0;const interval=setInterval(()=>{container.innerText+=text.charAt(i);i++;if(i>=text.length) clearInterval(interval);container.scrollIntoView({behavior:"smooth"});},25);}
 
-function register(){
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    if(!username || !password) return alert("Felder ausfüllen");
-
-    if(users[username]) return alert("User existiert");
-
-    users[username] = {
-        password: password,
-        chats: {}
-    };
-
-    saveUsers();
-    alert("Registriert! Jetzt einloggen.");
-}
-
-function login(){
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    if(!users[username] || users[username].password !== password){
-        return alert("Falsche Daten");
-    }
-
-    currentUser = username;
-    localStorage.setItem("nano_currentUser", username);
-    document.getElementById("loginScreen").style.display="none";
-    renderChats();
-}
-
-function logout(){
-    currentUser = null;
-    localStorage.removeItem("nano_currentUser");
-    location.reload();
-}
-
-/* ---------- CHAT SYSTEM ---------- */
-
-function createChat(){
-    const id = Date.now().toString();
-    users[currentUser].chats[id] = {
-        title: "Chat " + (Object.keys(users[currentUser].chats).length + 1),
-        messages: []
-    };
-    currentChat = id;
-    saveUsers();
-    renderChats();
-    loadChat(id);
-}
-
-function renderChats(){
-    const list = document.getElementById("chatList");
-    list.innerHTML="";
-
-    if(!currentUser) return;
-
-    const chats = users[currentUser].chats;
-
-    Object.keys(chats).forEach(id=>{
-        const div = document.createElement("div");
-        div.className="chat-item";
-        if(id===currentChat) div.classList.add("active");
-
-        div.innerText=chats[id].title;
-        div.onclick=()=>loadChat(id);
-        list.appendChild(div);
-    });
-}
-
-function loadChat(id){
-    currentChat=id;
-    const container=document.getElementById("messages");
-    container.innerHTML="";
-
-    users[currentUser].chats[id].messages.forEach(msg=>{
-        addMessage(msg.text,msg.role,false);
-    });
-}
-
-function addMessage(text,role,save=true){
-    const div=document.createElement("div");
-    div.className="message "+role;
-    div.innerText=text;
-    document.getElementById("messages").appendChild(div);
-    div.scrollIntoView({behavior:"smooth"});
-
-    if(save && currentUser && currentChat){
-        users[currentUser].chats[currentChat].messages.push({text,role});
-        saveUsers();
-    }
-}
-
-/* ---------- SEND ---------- */
-
+// Send message
 async function sendPrompt(){
-    const input=document.getElementById("prompt");
-    const prompt=input.value.trim();
-    if(!prompt || !currentUser || !currentChat) return;
-
-    addMessage(prompt,"user");
-    input.value="";
-
-    const loading=document.createElement("div");
-    loading.className="message bot";
-    loading.innerText="...";
-    document.getElementById("messages").appendChild(loading);
-
+    const input=document.getElementById("prompt");const text=input.value.trim();
+    if(!text||!currentChat) return;
+    users[currentUser].chats[currentChat].messages.push({role:"user",text});renderMessages();input.value="";
+    const chatDiv=document.getElementById("chat");
+    const botDiv=document.createElement("div");botDiv.className="message ai";botDiv.innerText="…";chatDiv.appendChild(botDiv);chatDiv.scrollTop=chatDiv.scrollHeight;
     try{
-        const res=await fetch(API_URL,{
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({prompt})
-        });
-
+        const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:text,language:currentLanguage})});
         const data=await res.json();
-
-        loading.remove();
-        addMessage(data.text,"bot");
-
-    }catch{
-        loading.innerText="Server Fehler";
-    }
+        typeText(botDiv,data.text);
+        users[currentUser].chats[currentChat].messages.push({role:"ai",text:data.text});saveUsers();
+    }catch{botDiv.innerText="Fehler beim Server";}
 }
 
-/* ---------- START ---------- */
-
-if(currentUser){
-    document.getElementById("loginScreen").style.display="none";
-    renderChats();
-}
-
+// Start app
+function startApp(){loginScreen.style.display="none";profileName.innerText=currentUser;renderChats();renderMessages();}
+if(currentUser) startApp();else loginScreen.style.display="flex";
 </script>
-
 </body>
 </html>
