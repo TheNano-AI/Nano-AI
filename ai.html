@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nano AI</title>
+<title>Nano AI Chat</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
 body{display:flex;height:100vh;background:#0f172a;color:white;overflow:hidden;}
 
 /* SIDEBAR */
-.sidebar{width:300px;background:#111827;display:flex;flex-direction:column;padding:20px;}
+.sidebar{width:280px;background:#111827;display:flex;flex-direction:column;padding:20px;}
 .logo{display:flex;align-items:center;margin-bottom:20px;}
 .logo img{height:50px;width:50px;object-fit:contain;border-radius:12px;margin-right:10px;}
 .logo span{font-size:22px;font-weight:bold;}
@@ -114,7 +114,7 @@ let currentUser=localStorage.getItem("nano_currentUser");
 let currentChat=null;
 let currentLanguage=localStorage.getItem("nano_language")||"de";
 
-// Sprachwahl
+// Sprache
 function changeLanguage(){currentLanguage=document.getElementById("languageSelect").value;localStorage.setItem("nano_language",currentLanguage);}
 
 // Dropdown
@@ -154,7 +154,6 @@ function renderMessages(){
     users[currentUser].chats[currentChat].messages.forEach(m=>{
         const div=document.createElement("div");div.className="message "+(m.role==="ai"?"ai":"user");
         div.innerText=m.text;
-        // Edit button
         if(m.role==="user"){
             const editBtn=document.createElement("button");editBtn.className="edit-btn";editBtn.innerText="✏";editBtn.onclick=()=>{const newText=prompt("Nachricht bearbeiten:",m.text);if(newText){m.text=newText;saveUsers();renderMessages();}};
             div.appendChild(editBtn);
@@ -163,19 +162,8 @@ function renderMessages(){
     });
 }
 
-// AI Typing
-function typeText(container,text){
-    container.innerText="";
-    let i=0;
-    const interval=setInterval(()=>{
-        container.innerText+=text.charAt(i);
-        i++;
-        if(i>=text.length) clearInterval(interval);
-        container.scrollIntoView({behavior:"smooth"});
-    },25);
-}
+function typeText(container,text){container.innerText="";let i=0;const interval=setInterval(()=>{container.innerText+=text.charAt(i);i++;if(i>=text.length)clearInterval(interval);container.scrollIntoView({behavior:"smooth"});},25);}
 
-// Nachricht senden
 function sendPrompt(){
     const input=document.getElementById("prompt");const text=input.value.trim();if(!text||!currentChat)return;
     users[currentUser].chats[currentChat].messages.push({role:"user",text});renderMessages();input.value="";
@@ -187,7 +175,6 @@ function sendPrompt(){
     .catch(()=>{botDiv.innerText="Fehler beim Server";});
 }
 
-// Start App
 function startApp(){loginScreen.style.display="none";profileName.innerText=currentUser;document.getElementById("languageSelect").value=currentLanguage;renderChats();renderMessages();}
 if(currentUser)startApp();else loginScreen.style.display="flex";
 </script>
