@@ -8,7 +8,7 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
 body{display:flex;height:100vh;background:#0f172a;color:white;overflow:hidden;}
 
-/* SIDEBAR */
+/* ===== SIDEBAR ===== */
 .sidebar{width:280px;background:#111827;display:flex;flex-direction:column;padding:20px;border-right:1px solid #1f2937;}
 .logo{display:flex;align-items:center;margin-bottom:20px;}
 .logo img{height:50px;width:50px;object-fit:contain;border-radius:12px;margin-right:10px;}
@@ -22,10 +22,10 @@ body{display:flex;height:100vh;background:#0f172a;color:white;overflow:hidden;}
 .chat-actions button{background:none;border:none;color:#aaa;cursor:pointer;font-size:16px;margin-left:5px;transition:0.2s;}
 .chat-actions button:hover{color:white;}
 
-/* MAIN */
+/* ===== MAIN ===== */
 .main{flex:1;display:flex;flex-direction:column;}
 
-/* TOP BAR */
+/* ===== TOPBAR ===== */
 .topbar{height:60px;background:#111827;display:flex;justify-content:space-between;align-items:center;padding:0 20px;position:relative;border-bottom:1px solid #1f2937;}
 .profile{cursor:pointer;background:#2563eb;padding:8px 14px;border-radius:20px;user-select:none;}
 .plan-badge{background:#1f2937;padding:6px 12px;border-radius:14px;font-size:13px;}
@@ -34,7 +34,7 @@ body{display:flex;height:100vh;background:#0f172a;color:white;overflow:hidden;}
 .dropdown select{appearance:none;}
 .dropdown button:hover{background:#2563eb;}
 
-/* CHAT */
+/* ===== CHAT ===== */
 .chat{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
 .message{padding:12px;border-radius:14px;word-wrap:break-word;max-width:70%;line-height:1.5;position:relative;}
 .user{text-align:right;color:#60a5fa;background:rgba(96,165,250,0.15);align-self:flex-end;}
@@ -45,7 +45,7 @@ body{display:flex;height:100vh;background:#0f172a;color:white;overflow:hidden;}
 .edit-btn{position:absolute;top:5px;right:5px;background:#2563eb;border:none;color:white;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:14px;text-align:center;line-height:22px;transition:0.2s;}
 .edit-btn:hover{background:#1e40af;}
 
-/* INPUT */
+/* ===== INPUT ===== */
 .input-area{display:flex;flex-direction:column;padding:15px;background:#111827;border-top:1px solid #1f2937;}
 .input-row{display:flex;gap:10px;}
 .input-row input{flex:1;padding:12px;border-radius:14px;border:none;outline:none;background:#1f2937;color:white;}
@@ -55,30 +55,71 @@ body{display:flex;height:100vh;background:#0f172a;color:white;overflow:hidden;}
 #emojiPanel button{background:#1f2937;border:none;border-radius:6px;padding:4px 8px;cursor:pointer;color:white;font-size:18px;transition:0.2s;}
 #emojiPanel button:hover{background:#2563eb;}
 
-/* LOGIN SCREEN */
+/* ===== LOGIN ===== */
 #loginScreen{position:absolute;inset:0;background:#0f172a;display:flex;justify-content:center;align-items:center;z-index:10;}
 .login-box{background:#111827;padding:40px;border-radius:12px;width:320px;display:flex;flex-direction:column;align-items:center;}
 .login-box input{width:100%;padding:10px;margin-bottom:10px;border:none;border-radius:12px;background:#1f2937;color:white;}
 .login-box button{width:100%;padding:10px;border:none;border-radius:12px;background:#2563eb;color:white;cursor:pointer;margin-bottom:5px;font-weight:bold;transition:0.2s;}
 .login-box button:hover{background:#1e40af;}
 
-/* ADMIN PANEL */
-.admin-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#111827;color:white;width:500px;max-height:80vh;overflow-y:auto;border-radius:12px;padding:20px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.4);border:1px solid #1f2937;}
-.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #1f2937;}
-.admin-header button{background:#ef4444;border:none;color:white;padding:6px 12px;border-radius:8px;cursor:pointer;}
-.admin-header button:hover{background:#dc2626;}
-.admin-section{margin-bottom:15px;}
-.admin-section h3{margin-bottom:10px;color:#60a5fa;}
-.admin-section input,.admin-section select{width:100%;padding:8px;margin:5px 0;border:none;border-radius:8px;background:#1f2937;color:white;}
-.admin-section button{padding:8px 12px;margin:3px;background:#2563eb;border:none;border-radius:8px;color:white;cursor:pointer;transition:0.2s;}
-.admin-section button:hover{background:#1e40af;}
-.hidden{display:none;}
+/* ===== MODAL SYSTEM (Tabs, Admin, Profile, Confirm) ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;justify-content:center;align-items:center;z-index:1000;}
+.modal{background:#111827;border-radius:16px;padding:20px;width:90%;max-width:600px;max-height:85vh;overflow-y:auto;border:1px solid #1f2937;box-shadow:0 8px 32px rgba(0,0,0,0.4);}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #1f2937;}
+.modal-header h2{color:#60a5fa;}
+.modal-header .close-btn{background:#ef4444;border:none;color:white;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:16px;}
+.modal-header .close-btn:hover{background:#dc2626;}
 
-/* SCROLLBAR */
-::-webkit-scrollbar{width:8px;}
+/* Tabs */
+.tabs{display:flex;gap:5px;margin-bottom:15px;border-bottom:1px solid #1f2937;padding-bottom:10px;}
+.tab-btn{padding:8px 16px;background:#1f2937;border:none;border-radius:8px;color:white;cursor:pointer;transition:0.2s;font-size:14px;}
+.tab-btn:hover{background:#2563eb;}
+.tab-btn.active{background:#2563eb;font-weight:bold;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* Modal Sections */
+.modal-section{margin-bottom:20px;padding:15px;background:#1f2937;border-radius:12px;}
+.modal-section h3{margin-bottom:10px;color:#60a5fa;font-size:16px;}
+.modal-section p{margin:5px 0;color:#aaa;font-size:14px;}
+.modal-section input,.modal-section select,.modal-section textarea{width:100%;padding:10px;margin:5px 0;border:none;border-radius:8px;background:#111827;color:white;}
+.modal-section textarea{min-height:80px;resize:vertical;}
+.modal-section button{padding:8px 16px;margin:3px;background:#2563eb;border:none;border-radius:8px;color:white;cursor:pointer;transition:0.2s;}
+.modal-section button:hover{background:#1e40af;}
+.modal-section button.danger{background:#ef4444;}
+.modal-section button.danger:hover{background:#dc2626;}
+.modal-section button.success{background:#22c55e;}
+.modal-section button.success:hover{background:#16a34a;}
+
+/* Confirm Modal */
+.confirm-modal{max-width:400px;text-align:center;}
+.confirm-modal p{margin:15px 0;color:#aaa;}
+.confirm-actions{display:flex;gap:10px;justify-content:center;margin-top:15px;}
+
+/* Stats Grid */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.stat-card{background:#111827;padding:12px;border-radius:10px;text-align:center;}
+.stat-card .num{font-size:24px;font-weight:bold;color:#60a5fa;}
+.stat-card .label{font-size:12px;color:#aaa;}
+
+/* Profile Preview */
+.profile-preview{text-align:center;padding:15px;background:#111827;border-radius:12px;margin-bottom:15px;}
+.profile-preview .avatar{width:80px;height:80px;background:#2563eb;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 10px;}
+.profile-preview .name{font-size:18px;font-weight:bold;}
+.profile-preview .plan{display:inline-block;padding:4px 12px;background:#1f2937;border-radius:20px;font-size:12px;margin-top:5px;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:8px;height:8px;}
 ::-webkit-scrollbar-track{background:#111827;}
 ::-webkit-scrollbar-thumb{background:#2563eb;border-radius:4px;}
 ::-webkit-scrollbar-thumb:hover{background:#1e40af;}
+
+/* Responsive */
+@media(max-width:768px){
+    body{flex-direction:column;}
+    .sidebar{width:100%;height:auto;max-height:200px;}
+    .main{height:auto;}
+}
 </style>
 </head>
 <body>
@@ -97,24 +138,25 @@ body{display:flex;height:100vh;background:#0f172a;color:white;overflow:hidden;}
 <!-- SIDEBAR -->
 <div class="sidebar">
     <div class="logo">
-        <img src="NanoAI.png" alt="Nano AI Logo">
+        <img src="NanoAI.png" alt="Nano AI">
         <span>Nano AI</span>
     </div>
     <button class="new-chat" onclick="createChat()">+ Neuer Chat</button>
     <div class="chat-list" id="chatList"></div>
 </div>
 
-<!-- MAIN AREA -->
+<!-- MAIN -->
 <div class="main">
     <div class="topbar">
         <div style="display:flex;gap:10px;align-items:center;">
             <div id="planBadge" class="plan-badge">Free</div>
-            <button id="adminBtn" class="send-btn" style="padding:6px 12px;font-size:13px;display:none;" onclick="openAdmin()">Admin</button>
+            <button id="adminBtn" class="send-btn" style="padding:6px 12px;font-size:13px;display:none;" onclick="openModal('adminModal')">Admin</button>
+            <button class="send-btn" style="padding:6px 12px;font-size:13px;background:#1f2937;" onclick="openModal('settingsModal')">⚙️</button>
         </div>
         <div style="display:flex;gap:10px;align-items:center;">
             <div class="profile" onclick="toggleDropdown()" id="profileName">Profil</div>
             <div class="dropdown" id="dropdown">
-                <button onclick="alert('Profilseite kommt bald')">Profil</button>
+                <button onclick="openModal('profileModal')">👤 Mein Profil</button>
                 <select id="languageSelect" onchange="changeLanguage()">
                     <option value="de">Deutsch</option>
                     <option value="en">English</option>
@@ -141,41 +183,233 @@ body{display:flex;height:100vh;background:#0f172a;color:white;overflow:hidden;}
     </div>
 </div>
 
-<!-- ADMIN PANEL -->
-<div id="adminPanel" class="admin-panel hidden">
-    <div class="admin-header">
-        <h2>Admin Panel</h2>
-        <button onclick="closeAdmin()">✕</button>
-    </div>
-    <div class="admin-section">
-        <h3>Server Owners</h3>
-        <p>Owner: <strong>Lobi</strong></p>
-        <p>Co-Owner: <strong>Jovi</strong></p>
-    </div>
-    <div class="admin-section">
-        <h3>User Management</h3>
-        <input id="userSearch" placeholder="Username eingeben">
-        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;">
-            <button onclick="banUser()">Ban</button>
-            <button onclick="unbanUser()">Unban</button>
-            <button onclick="upgradeUser()">Upgrade</button>
-            <button onclick="resetLimit()">Reset Limit</button>
+<!-- ===== MODALS ===== -->
+
+<!-- PROFILE MODAL -->
+<div id="profileModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>👤 Mein Profil</h2>
+            <button class="close-btn" onclick="closeModal('profileModal')">✕</button>
+        </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('profileModal','info')">Info</button>
+            <button class="tab-btn" onclick="switchTab('profileModal','security')">Sicherheit</button>
+            <button class="tab-btn" onclick="switchTab('profileModal','data')">Daten</button>
+        </div>
+        
+        <div id="profile-info" class="tab-content active">
+            <div class="profile-preview">
+                <div class="avatar">👤</div>
+                <div class="name" id="profileNameDisplay">Username</div>
+                <div class="plan" id="profilePlanDisplay">Free</div>
+            </div>
+            <div class="modal-section">
+                <h3>Statistiken</h3>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="num" id="statChats">0</div><div class="label">Chats</div></div>
+                    <div class="stat-card"><div class="num" id="statMsgs">0</div><div class="label">Nachrichten</div></div>
+                    <div class="stat-card"><div class="num" id="statLimit">50</div><div class="label">Limit/Monat</div></div>
+                    <div class="stat-card"><div class="num" id="statUsed">0</div><div class="label">Verbraucht</div></div>
+                </div>
+            </div>
+            <div class="modal-section">
+                <h3>Plan ändern</h3>
+                <p>Upgrade für mehr Nachrichten & Features.</p>
+                <select id="planSelect">
+                    <option value="free">Free (50 Nachrichten)</option>
+                    <option value="ultra">Ultra (500 Nachrichten)</option>
+                    <option value="nano">Nano (Unlimited)</option>
+                </select>
+                <button onclick="changePlan()" class="success">Plan updaten</button>
+            </div>
+        </div>
+        
+        <div id="profile-security" class="tab-content">
+            <div class="modal-section">
+                <h3>Passwort ändern</h3>
+                <input type="password" id="oldPass" placeholder="Altes Passwort">
+                <input type="password" id="newPass" placeholder="Neues Passwort">
+                <input type="password" id="confirmPass" placeholder="Bestätigen">
+                <button onclick="changePassword()">Passwort speichern</button>
+            </div>
+            <div class="modal-section">
+                <h3>Account</h3>
+                <button class="danger" onclick="confirmAction('deleteAccount','Willst du deinen Account WIRKLICH löschen?')">🗑️ Account löschen</button>
+            </div>
+        </div>
+        
+        <div id="profile-data" class="tab-content">
+            <div class="modal-section">
+                <h3>Daten exportieren</h3>
+                <p>Lade alle deine Chats als Text-Datei herunter.</p>
+                <button onclick="exportData()">📥 Exportieren</button>
+            </div>
+            <div class="modal-section">
+                <h3>Daten löschen</h3>
+                <p>Alle Chats und Nachrichten dieses Accounts entfernen.</p>
+                <button class="danger" onclick="confirmAction('clearData','Alle Daten löschen? Dies kann nicht rückgängig gemacht werden!')">🗑️ Alle Daten löschen</button>
+            </div>
         </div>
     </div>
-    <div class="admin-section">
-        <h3>Tariff verschenken</h3>
-        <input id="giftUser" placeholder="Username">
-        <select id="giftTariff">
-            <option value="free">Free</option>
-            <option value="ultra">Ultra</option>
-            <option value="nano">Nano</option>
-        </select>
-        <button onclick="giftTariff()" style="margin-top:8px;">Verschenken</button>
+</div>
+
+<!-- ADMIN MODAL -->
+<div id="adminModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>🛡️ Admin Panel</h2>
+            <button class="close-btn" onclick="closeModal('adminModal')">✕</button>
+        </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('adminModal','users')">Users</button>
+            <button class="tab-btn" onclick="switchTab('adminModal','tariffs')">Tarife</button>
+            <button class="tab-btn" onclick="switchTab('adminModal','stats')">Statistiken</button>
+            <button class="tab-btn" onclick="switchTab('adminModal','settings')">Einstellungen</button>
+        </div>
+        
+        <div id="admin-users" class="tab-content active">
+            <div class="modal-section">
+                <h3>User suchen</h3>
+                <input id="adminUserSearch" placeholder="Username eingeben..." onkeyup="searchUsers()">
+                <div id="adminUserResults" style="margin-top:10px;max-height:200px;overflow-y:auto;"></div>
+            </div>
+            <div class="modal-section">
+                <h3>Aktionen für ausgewählten User</h3>
+                <p id="selectedUserInfo" style="color:#60a5fa;margin-bottom:10px;">Kein User ausgewählt</p>
+                <input type="hidden" id="selectedUser">
+                <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                    <button onclick="banUser()">🚫 Ban</button>
+                    <button onclick="unbanUser()">✅ Unban</button>
+                    <button onclick="kickUser()">👢 Kick</button>
+                    <button onclick="resetUserLimit()">🔄 Limit reset</button>
+                    <button onclick="deleteUser()" class="danger">🗑️ Löschen</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="admin-tariffs" class="tab-content">
+            <div class="modal-section">
+                <h3>Tarif verschenken</h3>
+                <input id="giftUser" placeholder="Username">
+                <select id="giftTariff">
+                    <option value="free">Free</option>
+                    <option value="ultra">Ultra (500)</option>
+                    <option value="nano">Nano (∞)</option>
+                </select>
+                <button onclick="giftTariff()" class="success">Verschenken ✨</button>
+            </div>
+            <div class="modal-section">
+                <h3>Plan-Preise (Demo)</h3>
+                <p>• Free: Kostenlos, 50 Nachrichten/Monat</p>
+                <p>• Ultra: 4.99€/Monat, 500 Nachrichten</p>
+                <p>• Nano: 9.99€/Monat, Unbegrenzt + Priority</p>
+            </div>
+        </div>
+        
+        <div id="admin-stats" class="tab-content">
+            <div class="modal-section">
+                <h3>Server Stats</h3>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="num" id="adminStatUsers">0</div><div class="label">Gesamt-User</div></div>
+                    <div class="stat-card"><div class="num" id="adminStatChats">0</div><div class="label">Gesamt-Chats</div></div>
+                    <div class="stat-card"><div class="num" id="adminStatMsgs">0</div><div class="label">Gesamt-Nachrichten</div></div>
+                    <div class="stat-card"><div class="num" id="adminStatBanned">0</div><div class="label">Gebannte User</div></div>
+                </div>
+            </div>
+            <div class="modal-section">
+                <h3>Owner Info</h3>
+                <p>👑 Haupt-Owner: <strong>Lobi</strong></p>
+                <p>🤝 Co-Owner: <strong>Jovi</strong></p>
+                <p>📅 Server seit: <strong>2026</strong></p>
+            </div>
+        </div>
+        
+        <div id="admin-settings" class="tab-content">
+            <div class="modal-section">
+                <h3>Server-Einstellungen</h3>
+                <label style="display:flex;align-items:center;gap:10px;margin:8px 0;">
+                    <input type="checkbox" id="maintMode" onchange="toggleMaintenance()"> Wartungsmodus
+                </label>
+                <label style="display:flex;align-items:center;gap:10px;margin:8px 0;">
+                    <input type="checkbox" id="regOpen" checked> Registrierungen erlaubt
+                </label>
+                <button onclick="saveAdminSettings()" class="success">Speichern</button>
+            </div>
+            <div class="modal-section">
+                <h3>Backup</h3>
+                <button onclick="createBackup()">💾 Backup erstellen</button>
+                <button onclick="restoreBackup()" style="background:#1f2937;">📤 Wiederherstellen</button>
+            </div>
+        </div>
     </div>
-    <div class="admin-section">
-        <h3>Stats</h3>
-        <p>Total Users: <span id="statUsers">0</span></p>
-        <p>Messages Today: <span id="statMessages">0</span></p>
+</div>
+
+<!-- SETTINGS MODAL (Chat-Einstellungen) -->
+<div id="settingsModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>⚙️ Chat-Einstellungen</h2>
+            <button class="close-btn" onclick="closeModal('settingsModal')">✕</button>
+        </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('settingsModal','chat')">Chat</button>
+            <button class="tab-btn" onclick="switchTab('settingsModal','appearance')">Design</button>
+            <button class="tab-btn" onclick="switchTab('settingsModal','privacy')">Privatsphäre</button>
+        </div>
+        
+        <div id="settings-chat" class="tab-content active">
+            <div class="modal-section">
+                <h3>Aktuellen Chat</h3>
+                <button onclick="confirmAction('renameChat','Chat umbenennen?')" style="margin-right:5px;">✏️ Umbenennen</button>
+                <button onclick="confirmAction('deleteChat','Diesen Chat WIRKLICH löschen?')" class="danger">🗑️ Löschen</button>
+            </div>
+            <div class="modal-section">
+                <h3>Nachrichten-Verlauf</h3>
+                <button onclick="clearCurrentChat()">🧹 Chat leeren (Nachrichten behalten)</button>
+                <button onclick="exportCurrentChat()" style="margin-top:5px;">📥 Als TXT exportieren</button>
+            </div>
+        </div>
+        
+        <div id="settings-appearance" class="tab-content">
+            <div class="modal-section">
+                <h3>Theme</h3>
+                <button onclick="setTheme('dark')" style="margin-right:5px;">🌙 Dark</button>
+                <button onclick="setTheme('light')">☀️ Light</button>
+            </div>
+            <div class="modal-section">
+                <h3>Nachrichten-Anzeige</h3>
+                <label style="display:flex;align-items:center;gap:10px;margin:8px 0;">
+                    <input type="checkbox" id="typingEffect" checked onchange="saveSettings()"> Schreib-Effekt
+                </label>
+                <label style="display:flex;align-items:center;gap:10px;margin:8px 0;">
+                    <input type="checkbox" id="showEmoji" checked onchange="saveSettings()"> Emoji-Panel anzeigen
+                </label>
+            </div>
+        </div>
+        
+        <div id="settings-privacy" class="tab-content">
+            <div class="modal-section">
+                <h3>Datenschutz</h3>
+                <p>Alle Daten werden lokal in deinem Browser gespeichert.</p>
+                <button onclick="clearAllLocalStorage()" class="danger">🗑️ Kompletten Speicher löschen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONFIRM MODAL (für Lösch-/Umbenenn-Abfragen) -->
+<div id="confirmModal" class="modal-overlay">
+    <div class="modal confirm-modal">
+        <div class="modal-header">
+            <h2>⚠️ Bestätigen</h2>
+            <button class="close-btn" onclick="closeModal('confirmModal')">✕</button>
+        </div>
+        <p id="confirmText">Möchtest du wirklich fortfahren?</p>
+        <div class="confirm-actions">
+            <button onclick="cancelConfirm()" style="background:#1f2937;">Abbrechen</button>
+            <button onclick="executeConfirm()" class="danger">Ja, ausführen</button>
+        </div>
     </div>
 </div>
 
@@ -190,389 +424,206 @@ let users = JSON.parse(localStorage.getItem("nano_users")) || {};
 let currentUser = localStorage.getItem("nano_currentUser");
 let currentChat = null;
 let currentLanguage = localStorage.getItem("nano_language") || "de";
+let confirmCallback = null;
+let settings = JSON.parse(localStorage.getItem("nano_settings")) || {typingEffect:true, showEmoji:true, theme:'dark'};
 
-const plans = {
-    free: {name: "Free", limit: 50},
-    ultra: {name: "Ultra", limit: 500},
-    nano: {name: "Nano", limit: 9999}
-};
-
-const emojis = ["😀","😂","😎","😢","😡","👍","👎","❤️","🔥","🎉","✨","🤖","💬","✅","❌"];
+const plans = {free:{name:"Free",limit:50}, ultra:{name:"Ultra",limit:500}, nano:{name:"Nano",limit:9999}};
+const emojis = ["😀","😂","😎","😢","😡","👍","👎","❤️","🔥","🎉","✨","🤖","💬","✅","❌","🚀","💡"];
 
 // === STORAGE ===
-function saveUsers(){
-    localStorage.setItem("nano_users", JSON.stringify(users));
-    updateStats();
-}
+function saveUsers(){localStorage.setItem("nano_users",JSON.stringify(users)); updateStats();}
+function saveSettings(){localStorage.setItem("nano_settings",JSON.stringify(settings));}
 
 // === AUTH ===
 function register(){
-    const u = document.getElementById("username").value.trim();
-    const p = document.getElementById("password").value.trim();
-    if(!u || !p) return alert("Bitte alle Felder ausfüllen");
-    if(users[u]) return alert("User existiert bereits");
-    
-    users[u] = {
-        password: p,
-        plan: "free",
-        banned: false,
-        chats: {},
-        messages: 0
-    };
-    saveUsers();
-    alert("Registriert! Jetzt einloggen.");
+    const u=document.getElementById("username").value.trim();
+    const p=document.getElementById("password").value.trim();
+    if(!u||!p)return alert("Bitte alle Felder ausfüllen");
+    if(users[u])return alert("User existiert bereits");
+    users[u]={password:p,plan:"free",banned:false,chats:{},messages:0};
+    saveUsers(); alert("Registriert! Jetzt einloggen.");
 }
-
 function login(){
-    const u = document.getElementById("username").value.trim();
-    const p = document.getElementById("password").value.trim();
-    
-    if(!users[u]) return alert("User nicht gefunden");
-    if(users[u].password !== p) return alert("Falsches Passwort");
-    if(users[u].banned) return alert("Dieser Account wurde gebannt");
-    
-    currentUser = u;
-    localStorage.setItem("nano_currentUser", u);
-    startApp();
+    const u=document.getElementById("username").value.trim();
+    const p=document.getElementById("password").value.trim();
+    if(!users[u])return alert("User nicht gefunden");
+    if(users[u].password!==p)return alert("Falsches Passwort");
+    if(users[u].banned)return alert("Dieser Account wurde gebannt");
+    currentUser=u; localStorage.setItem("nano_currentUser",u); startApp();
 }
-
-function logout(){
-    localStorage.removeItem("nano_currentUser");
-    location.reload();
-}
+function logout(){localStorage.removeItem("nano_currentUser"); location.reload();}
 
 // === APP INIT ===
 function startApp(){
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("profileName").innerText = currentUser;
-    
-    // Admin button visibility
-    if(currentUser === OWNER || currentUser === COOWNER){
-        document.getElementById("adminBtn").style.display = "block";
-    }
-    
-    // Language
-    document.getElementById("languageSelect").value = currentLanguage;
-    applyLanguage();
-    
-    updatePlan();
-    renderChats();
-    renderMessages();
-    renderEmojiPanel();
-    updateStats();
+    document.getElementById("loginScreen").style.display="none";
+    document.getElementById("profileName").innerText=currentUser;
+    document.getElementById("profileNameDisplay").innerText=currentUser;
+    if(currentUser===OWNER||currentUser===COOWNER)document.getElementById("adminBtn").style.display="block";
+    document.getElementById("languageSelect").value=currentLanguage; applyLanguage();
+    updatePlan(); updateProfileStats(); renderChats(); renderMessages(); renderEmojiPanel(); updateStats();
+    if(settings.theme==='light')setTheme('light');
 }
 
-// === UI FUNCTIONS ===
-function toggleDropdown(){
-    const d = document.getElementById("dropdown");
-    d.style.display = d.style.display === "flex" ? "none" : "flex";
+// === UI: MODALS & TABS ===
+function openModal(id){document.getElementById(id).style.display="flex";}
+function closeModal(id){document.getElementById(id).style.display="none";}
+function switchTab(modalId,tabName){
+    document.querySelectorAll(`#${modalId} .tab-btn`).forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(`#${modalId} .tab-content`).forEach(c=>c.classList.remove("active"));
+    event.target.classList.add("active");
+    document.getElementById(`${modalId.replace('Modal','')}-${tabName}`).classList.add("active");
+    if(modalId==="profileModal"&&tabName==="info")updateProfileStats();
+    if(modalId==="adminModal"&&tabName==="stats")updateAdminStats();
+}
+function confirmAction(action,text){
+    document.getElementById("confirmText").innerText=text;
+    confirmCallback=action;
+    openModal("confirmModal");
+}
+function cancelConfirm(){closeModal("confirmModal"); confirmCallback=null;}
+function executeConfirm(){
+    const action=confirmCallback; closeModal("confirmModal");
+    if(action==="deleteChat"&&currentChat)deleteChat(currentChat);
+    else if(action==="renameChat"&&currentChat)renameChat(currentChat);
+    else if(action==="deleteAccount")deleteAccount();
+    else if(action==="clearData")clearUserData();
+    confirmCallback=null;
 }
 
-function changeLanguage(){
-    currentLanguage = document.getElementById("languageSelect").value;
-    localStorage.setItem("nano_language", currentLanguage);
-    applyLanguage();
-}
-
+// === LANGUAGE ===
+function changeLanguage(){currentLanguage=document.getElementById("languageSelect").value; localStorage.setItem("nano_language",currentLanguage); applyLanguage();}
 function applyLanguage(){
-    const placeholders = {
-        de: "Nachricht schreiben...",
-        en: "Write a message...",
-        fr: "Écrire un message...",
-        es: "Escribe un mensaje...",
-        it: "Scrivi un messaggio...",
-        ru: "Напишите сообщение...",
-        tr: "Mesaj yaz...",
-        pl: "Napisz wiadomość...",
-        nl: "Bericht schrijven...",
-        pt: "Escreva uma mensagem..."
-    };
-    document.getElementById("prompt").placeholder = placeholders[currentLanguage] || "Write a message...";
+    const ph={de:"Nachricht schreiben...",en:"Write a message...",fr:"Écrire un message...",es:"Escribe un mensaje...",it:"Scrivi un messaggio...",ru:"Напишите сообщение...",tr:"Mesaj yaz...",pl:"Napisz wiadomość...",nl:"Bericht schrijven...",pt:"Escreva uma mensagem..."};
+    document.getElementById("prompt").placeholder=ph[currentLanguage]||"Write a message...";
 }
 
-function updatePlan(){
-    if(!currentUser) return;
-    const p = users[currentUser].plan;
-    document.getElementById("planBadge").innerText = plans[p]?.name || "Free";
+// === PLAN & PROFILE ===
+function updatePlan(){if(!currentUser)return; const p=users[currentUser].plan; document.getElementById("planBadge").innerText=plans[p]?.name||"Free"; document.getElementById("profilePlanDisplay").innerText=plans[p]?.name||"Free"; document.getElementById("planSelect").value=p;}
+function updateProfileStats(){
+    if(!currentUser)return;
+    const u=users[currentUser];
+    const chatCount=Object.keys(u.chats||{}).length;
+    const msgCount=Object.values(u.chats||{}).reduce((s,c)=>s+(c.messages?.length||0),0);
+    document.getElementById("statChats").innerText=chatCount;
+    document.getElementById("statMsgs").innerText=msgCount;
+    document.getElementById("statLimit").innerText=plans[u.plan]?.limit||50;
+    document.getElementById("statUsed").innerText=u.messages||0;
+}
+function changePlan(){const newPlan=document.getElementById("planSelect").value; if(users[currentUser])users[currentUser].plan=newPlan; saveUsers(); updatePlan(); updateProfileStats(); alert("Plan aktualisiert!");}
+function changePassword(){
+    const oldP=document.getElementById("oldPass").value; const newP=document.getElementById("newPass").value; const confP=document.getElementById("confirmPass").value;
+    if(!oldP||!newP||!confP)return alert("Alle Felder ausfüllen");
+    if(users[currentUser].password!==oldP)return alert("Altes Passwort falsch");
+    if(newP!==confP)return alert("Passwörter stimmen nicht überein");
+    if(newP.length<6)return alert("Passwort muss mind. 6 Zeichen haben");
+    users[currentUser].password=newP; saveUsers(); alert("Passwort geändert!");
+    document.getElementById("oldPass").value=document.getElementById("newPass").value=document.getElementById("confirmPass").value="";
+}
+function deleteAccount(){if(!confirm("WIRKLICH löschen? Alle Daten sind weg!"))return; delete users[currentUser]; localStorage.removeItem("nano_currentUser"); saveUsers(); location.reload();}
+function clearUserData(){if(!confirm("Alle Chats & Nachrichten löschen?"))return; users[currentUser].chats={}; users[currentUser].messages=0; currentChat=null; saveUsers(); renderChats(); renderMessages(); alert("Daten gelöscht!"); closeModal("profileModal");}
+function exportData(){
+    let data=`Nano AI Export - ${currentUser}\n${"=".repeat(40)}\n\n`;
+    Object.entries(users[currentUser].chats||{}).forEach(([id,c])=>{
+        data+=`Chat: ${c.name}\n${"-".repeat(30)}\n`;
+        (c.messages||[]).forEach(m=>{data+=`[${m.role.toUpperCase()}] ${m.text}\n`;});
+        data+="\n";
+    });
+    const blob=new Blob([data],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="nano_export.txt"; a.click();
 }
 
 // === CHAT FUNCTIONS ===
-function createChat(){
-    const id = Date.now();
-    users[currentUser].chats[id] = {name: "Neuer Chat", messages: []};
-    currentChat = id;
-    saveUsers();
-    renderChats();
-    renderMessages();
-}
-
-function selectChat(id){
-    currentChat = id;
-    renderChats();
-    renderMessages();
-}
-
-function renameChat(id){
-    const name = prompt("Neuer Chat-Name:", users[currentUser].chats[id].name);
-    if(name && name.trim()){
-        users[currentUser].chats[id].name = name.trim();
-        saveUsers();
-        renderChats();
-    }
-}
-
-function deleteChat(id){
-    if(!confirm("Chat wirklich löschen?")) return;
-    delete users[currentUser].chats[id];
-    if(currentChat === id) currentChat = null;
-    saveUsers();
-    renderChats();
-    renderMessages();
-}
-
+function createChat(){const id=Date.now(); users[currentUser].chats[id]={name:"Neuer Chat",messages:[]}; currentChat=id; saveUsers(); renderChats(); renderMessages();}
+function selectChat(id){currentChat=id; renderChats(); renderMessages();}
+function renameChat(id){const name=prompt("Neuer Chat-Name:",users[currentUser].chats[id].name); if(name&&name.trim()){users[currentUser].chats[id].name=name.trim(); saveUsers(); renderChats();}}
+function deleteChat(id){if(!confirm("Chat wirklich löschen?"))return; delete users[currentUser].chats[id]; if(currentChat===id)currentChat=null; saveUsers(); renderChats(); renderMessages();}
 function renderChats(){
-    const list = document.getElementById("chatList");
-    list.innerHTML = "";
-    if(!currentUser) return;
-    
-    const chats = users[currentUser].chats;
-    Object.entries(chats).forEach(([id, chat]) => {
-        const div = document.createElement("div");
-        div.className = "chat-item" + (id === currentChat ? " active" : "");
-        
-        const title = document.createElement("span");
-        title.innerText = chat.name;
-        title.style.flex = "1";
-        title.style.cursor = "pointer";
-        title.onclick = () => selectChat(id);
-        
-        const actions = document.createElement("div");
-        actions.className = "chat-actions";
-        
-        const renameBtn = document.createElement("button");
-        renameBtn.innerHTML = "✏";
-        renameBtn.title = "Umbenennen";
-        renameBtn.onclick = (e) => {e.stopPropagation(); renameChat(id);};
-        
-        const deleteBtn = document.createElement("button");
-        deleteBtn.innerHTML = "🗑";
-        deleteBtn.title = "Löschen";
-        deleteBtn.onclick = (e) => {e.stopPropagation(); deleteChat(id);};
-        
-        actions.append(renameBtn, deleteBtn);
-        div.append(title, actions);
-        list.appendChild(div);
+    const list=document.getElementById("chatList"); list.innerHTML=""; if(!currentUser)return;
+    Object.entries(users[currentUser].chats).forEach(([id,chat])=>{
+        const div=document.createElement("div"); div.className="chat-item"+(id===currentChat?" active":"");
+        const title=document.createElement("span"); title.innerText=chat.name; title.style.flex="1"; title.style.cursor="pointer"; title.onclick=()=>selectChat(id);
+        const actions=document.createElement("div"); actions.className="chat-actions";
+        const ren=document.createElement("button"); ren.innerHTML="✏"; ren.title="Umbenennen"; ren.onclick=e=>{e.stopPropagation();renameChat(id);};
+        const del=document.createElement("button"); del.innerHTML="🗑"; del.title="Löschen"; del.onclick=e=>{e.stopPropagation();confirmAction('deleteChat','Chat "'+chat.name+'" löschen?');};
+        actions.append(ren,del); div.append(title,actions); list.appendChild(div);
     });
 }
-
 function renderMessages(){
-    const chatDiv = document.getElementById("chat");
-    chatDiv.innerHTML = "";
-    if(!currentChat || !users[currentUser]?.chats[currentChat]) return;
-    
-    const msgs = users[currentUser].chats[currentChat].messages;
-    msgs.forEach((m, index) => {
-        const div = document.createElement("div");
-        div.className = "message " + (m.role === "ai" ? "ai" : "user");
-        div.innerText = m.text;
-        
-        // Edit button for user messages
-        if(m.role === "user"){
-            const editBtn = document.createElement("button");
-            editBtn.className = "edit-btn";
-            editBtn.innerHTML = "✏";
-            editBtn.title = "Bearbeiten";
-            editBtn.onclick = () => {
-                const newText = prompt("Nachricht bearbeiten:", m.text);
-                if(newText !== null && newText.trim()){
-                    users[currentUser].chats[currentChat].messages[index].text = newText.trim();
-                    saveUsers();
-                    renderMessages();
-                }
-            };
-            div.appendChild(editBtn);
+    const chatDiv=document.getElementById("chat"); chatDiv.innerHTML=""; if(!currentChat||!users[currentUser]?.chats[currentChat])return;
+    users[currentUser].chats[currentChat].messages.forEach((m,index)=>{
+        const div=document.createElement("div"); div.className="message "+(m.role==="ai"?"ai":"user"); div.innerText=m.text;
+        if(m.role==="user"){
+            const edit=document.createElement("button"); edit.className="edit-btn"; edit.innerHTML="✏"; edit.title="Bearbeiten";
+            edit.onclick=()=>{const nt=prompt("Bearbeiten:",m.text); if(nt!==null&&nt.trim()){users[currentUser].chats[currentChat].messages[index].text=nt.trim(); saveUsers(); renderMessages();}};
+            div.appendChild(edit);
         }
         chatDiv.appendChild(div);
     });
-    chatDiv.scrollTop = chatDiv.scrollHeight;
+    chatDiv.scrollTop=chatDiv.scrollHeight;
 }
 
-// === TYPING EFFECT ===
-function typeText(container, text, callback){
-    container.innerText = "";
-    let i = 0;
-    const interval = setInterval(() => {
-        container.innerText += text.charAt(i);
-        i++;
-        container.scrollIntoView({behavior: "smooth"});
-        if(i >= text.length){
-            clearInterval(interval);
-            if(callback) callback();
-        }
-    }, 20);
+// === TYPING & SEND ===
+function typeText(container,text,callback){
+    if(!settings.typingEffect){container.innerText=text; if(callback)callback(); return;}
+    container.innerText=""; let i=0; const int=setInterval(()=>{container.innerText+=text.charAt(i); i++; container.scrollIntoView({behavior:"smooth"}); if(i>=text.length){clearInterval(int); if(callback)callback();}},20);
 }
-
-// === SEND MESSAGE ===
 function sendPrompt(){
-    const input = document.getElementById("prompt");
-    const text = input.value.trim();
-    if(!text || !currentChat) return;
-    
-    // Check limit
-    const plan = users[currentUser].plan;
-    if(users[currentUser].messages >= plans[plan].limit){
-        return alert("⚠️ Nachrichten-Limit erreicht! Upgrade für mehr.");
-    }
-    
-    // Add user message
-    users[currentUser].chats[currentChat].messages.push({role: "user", text});
-    users[currentUser].messages++;
-    renderMessages();
-    input.value = "";
-    
-    // Show typing indicator
-    const chatDiv = document.getElementById("chat");
-    const botDiv = document.createElement("div");
-    botDiv.className = "message ai";
-    const dots = document.createElement("span");
-    dots.className = "dots";
-    for(let d = 0; d < 3; d++){
-        const dot = document.createElement("span");
-        dot.className = "dot";
-        dots.appendChild(dot);
-    }
-    botDiv.appendChild(dots);
-    chatDiv.appendChild(botDiv);
-    chatDiv.scrollTop = chatDiv.scrollHeight;
-    
-    // API call
-    fetch(API_URL, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({prompt: text, language: currentLanguage})
-    })
-    .then(res => res.json())
-    .then(data => {
-        botDiv.removeChild(dots);
-        typeText(botDiv, data.text, () => {
-            users[currentUser].chats[currentChat].messages.push({role: "ai", text: data.text});
-            saveUsers();
-        });
-    })
-    .catch(err => {
-        botDiv.innerText = "❌ Server-Fehler. Bitte versuche es später.";
-        console.error(err);
+    const input=document.getElementById("prompt"); const text=input.value.trim(); if(!text||!currentChat)return;
+    const plan=users[currentUser].plan; if(users[currentUser].messages>=plans[plan].limit)return alert("⚠️ Limit erreicht! Upgrade für mehr.");
+    users[currentUser].chats[currentChat].messages.push({role:"user",text}); users[currentUser].messages++; renderMessages(); input.value="";
+    const chatDiv=document.getElementById("chat"); const botDiv=document.createElement("div"); botDiv.className="message ai";
+    const dots=document.createElement("span"); dots.className="dots"; for(let d=0;d<3;d++){const dot=document.createElement("span"); dot.className="dot"; dots.appendChild(dot);}
+    botDiv.appendChild(dots); chatDiv.appendChild(botDiv); chatDiv.scrollTop=chatDiv.scrollHeight;
+    fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:text,language:currentLanguage})})
+    .then(r=>r.json()).then(data=>{botDiv.removeChild(dots); typeText(botDiv,data.text,()=>{users[currentUser].chats[currentChat].messages.push({role:"ai",text:data.text}); saveUsers();});})
+    .catch(()=>{botDiv.innerText="❌ Server-Fehler";});
+}
+
+// === EMOJI ===
+function renderEmojiPanel(){if(!settings.showEmoji)return; const panel=document.getElementById("emojiPanel"); panel.innerHTML=""; emojis.forEach(e=>{const btn=document.createElement("button"); btn.innerText=e; btn.onclick=()=>{const inp=document.getElementById("prompt"); inp.value+=e; inp.focus();}; panel.appendChild(btn);});}
+
+// === ADMIN ===
+function searchUsers(){
+    const q=document.getElementById("adminUserSearch").value.toLowerCase(); const res=document.getElementById("adminUserResults"); res.innerHTML="";
+    Object.keys(users).filter(u=>u.toLowerCase().includes(q)).slice(0,10).forEach(u=>{
+        const btn=document.createElement("button"); btn.innerText=u+(users[u].banned?" 🚫":""); btn.style.width="100%"; btn.style.margin="2px 0"; btn.style.background=users[u].banned?"#ef4444":"#1f2937";
+        btn.onclick=()=>{document.getElementById("selectedUser").value=u; document.getElementById("selectedUserInfo").innerText=`Ausgewählt: ${u} | Plan: ${users[u].plan} | Nachrichten: ${users[u].messages}`;};
+        res.appendChild(btn);
     });
 }
-
-// === EMOJI PANEL ===
-function renderEmojiPanel(){
-    const panel = document.getElementById("emojiPanel");
-    panel.innerHTML = "";
-    emojis.forEach(emoji => {
-        const btn = document.createElement("button");
-        btn.innerText = emoji;
-        btn.onclick = () => {
-            const input = document.getElementById("prompt");
-            input.value += emoji;
-            input.focus();
-        };
-        panel.appendChild(btn);
-    });
+function banUser(){const u=document.getElementById("selectedUser").value; if(!u||!users[u])return alert("User auswählen"); if(u===OWNER||u===COOWNER)return alert("Owner nicht bannbar!"); users[u].banned=true; saveUsers(); alert(`${u} gebannt`); searchUsers();}
+function unbanUser(){const u=document.getElementById("selectedUser").value; if(!u||!users[u])return alert("User auswählen"); users[u].banned=false; saveUsers(); alert(`${u} entbannt`); searchUsers();}
+function kickUser(){const u=document.getElementById("selectedUser").value; if(!u)return alert("User auswählen"); alert(`${u} wurde gekickt (Demo)`);}
+function resetUserLimit(){const u=document.getElementById("selectedUser").value; if(!u||!users[u])return alert("User auswählen"); users[u].messages=0; saveUsers(); alert(`Limit für ${u} zurückgesetzt`);}
+function deleteUser(){const u=document.getElementById("selectedUser").value; if(!u||!users[u])return alert("User auswählen"); if(!confirm(`${u} WIRKLICH löschen?`))return; delete users[u]; saveUsers(); alert(`${u} gelöscht`); searchUsers(); updateAdminStats();}
+function giftTariff(){const u=document.getElementById("giftUser").value.trim(); const t=document.getElementById("giftTariff").value; if(!u||!users[u])return alert("User nicht gefunden"); if(!plans[t])return alert("Ungültiger Tarif"); users[u].plan=t; users[u].messages=0; saveUsers(); alert(`${t} an ${u} verschenkt!`); document.getElementById("giftUser").value="";}
+function updateAdminStats(){
+    document.getElementById("adminStatUsers").innerText=Object.keys(users).length;
+    document.getElementById("adminStatChats").innerText=Object.values(users).reduce((s,u)=>s+Object.keys(u.chats||{}).length,0);
+    document.getElementById("adminStatMsgs").innerText=Object.values(users).reduce((s,u)=>s+(u.messages||0),0);
+    document.getElementById("adminStatBanned").innerText=Object.values(users).filter(u=>u.banned).length;
 }
+function toggleMaintenance(){/* Demo */}
+function saveAdminSettings(){alert("Einstellungen gespeichert (Demo)");}
+function createBackup(){const data=JSON.stringify(users); const blob=new Blob([data],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="nano_backup.json"; a.click(); alert("Backup erstellt!");}
+function restoreBackup(){alert("Backup-Wiederherstellung: Wähle eine nano_backup.json Datei (Demo)");}
 
-// === ADMIN PANEL ===
-function openAdmin(){
-    if(currentUser !== OWNER && currentUser !== COOWNER) return;
-    document.getElementById("adminPanel").classList.remove("hidden");
-    updateStats();
-}
+// === SETTINGS ===
+function clearCurrentChat(){if(!currentChat)return; users[currentUser].chats[currentChat].messages=[]; saveUsers(); renderMessages(); alert("Chat geleert");}
+function exportCurrentChat(){if(!currentChat)return; let d=`Chat: ${users[currentUser].chats[currentChat].name}\n${"=".repeat(40)}\n`; users[currentUser].chats[currentChat].messages.forEach(m=>{d+=`[${m.role.toUpperCase()}] ${m.text}\n`;}); const blob=new Blob([d],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="chat_export.txt"; a.click();}
+function setTheme(t){settings.theme=t; saveSettings(); if(t==='light'){document.body.style.background="#f1f5f9"; document.body.style.color="#1e293b"; document.querySelectorAll('.sidebar,.topbar,.input-area,.modal,.chat-item').forEach(e=>{e.style.background="#ffffff"; e.style.color="#1e293b";});} else {document.body.style.background="#0f172a"; document.body.style.color="white"; document.querySelectorAll('.sidebar,.topbar,.input-area,.modal,.chat-item').forEach(e=>{e.style.background="#111827"; e.style.color="white";});}}
+function clearAllLocalStorage(){if(!confirm("KOMPLETTEN Browser-Speicher löschen? Alle Accounts & Chats sind weg!"))return; localStorage.clear(); location.reload();}
 
-function closeAdmin(){
-    document.getElementById("adminPanel").classList.add("hidden");
-}
+// === STATS ===
+function updateStats(){const uc=Object.keys(users).length; const mc=Object.values(users).reduce((s,u)=>s+(u.messages||0),0); document.getElementById("statMessages")?.innerText=mc; document.getElementById("statUsers")?.innerText=uc;}
 
-function banUser(){
-    const user = document.getElementById("userSearch").value.trim();
-    if(!user || !users[user]) return alert("User nicht gefunden");
-    if(user === OWNER || user === COOWNER) return alert("Kann Owner nicht bannen!");
-    
-    users[user].banned = true;
-    saveUsers();
-    alert(`✅ ${user} wurde gebannt`);
-    document.getElementById("userSearch").value = "";
-}
+// === INIT & EVENTS ===
+if(currentUser){startApp();}else{document.getElementById("loginScreen").style.display="flex";}
+document.addEventListener("click",(e)=>{const dd=document.getElementById("dropdown"); const pr=document.querySelector(".profile"); if(!dd.contains(e.target)&&!pr.contains(e.target))dd.style.display="none";});
+document.querySelectorAll(".modal-overlay").forEach(m=>{m.onclick=(e)=>{if(e.target===m)m.style.display="none";};});
 
-function unbanUser(){
-    const user = document.getElementById("userSearch").value.trim();
-    if(!user || !users[user]) return alert("User nicht gefunden");
-    
-    users[user].banned = false;
-    saveUsers();
-    alert(`✅ ${user} wurde entbannt`);
-    document.getElementById("userSearch").value = "";
-}
-
-function upgradeUser(){
-    const user = document.getElementById("userSearch").value.trim();
-    if(!user || !users[user]) return alert("User nicht gefunden");
-    
-    const newPlan = prompt("Neuer Plan (free/ultra/nano):", users[user].plan);
-    if(newPlan && plans[newPlan]){
-        users[user].plan = newPlan;
-        users[user].messages = 0;
-        saveUsers();
-        alert(`✅ ${user} hat jetzt ${plans[newPlan].name}`);
-    }
-    document.getElementById("userSearch").value = "";
-}
-
-function resetLimit(){
-    const user = document.getElementById("userSearch").value.trim();
-    if(!user || !users[user]) return alert("User nicht gefunden");
-    
-    users[user].messages = 0;
-    saveUsers();
-    alert(`✅ Nachrichten-Counter für ${user} zurückgesetzt`);
-    document.getElementById("userSearch").value = "";
-}
-
-function giftTariff(){
-    const user = document.getElementById("giftUser").value.trim();
-    const tariff = document.getElementById("giftTariff").value;
-    
-    if(!user || !users[user]) return alert("User nicht gefunden");
-    if(!plans[tariff]) return alert("Ungültiger Tarif");
-    
-    users[user].plan = tariff;
-    users[user].messages = 0;
-    saveUsers();
-    alert(`✅ ${tariff}-Tariff an ${user} verschenkt!`);
-    document.getElementById("giftUser").value = "";
-}
-
-function updateStats(){
-    const userCount = Object.keys(users).length;
-    const msgCount = Object.values(users).reduce((sum, u) => sum + (u.messages || 0), 0);
-    document.getElementById("statUsers").innerText = userCount;
-    document.getElementById("statMessages").innerText = msgCount;
-}
-
-// === INIT ===
-if(currentUser){
-    startApp();
-} else {
-    document.getElementById("loginScreen").style.display = "flex";
-}
-
-// Close dropdown when clicking outside
-document.addEventListener("click", (e) => {
-    const dropdown = document.getElementById("dropdown");
-    const profile = document.querySelector(".profile");
-    if(!dropdown.contains(e.target) && !profile.contains(e.target)){
-        dropdown.style.display = "none";
-    }
-});
+// Apply settings on load
+if(settings.typingEffect)document.getElementById("typingEffect").checked=true;
+if(settings.showEmoji)document.getElementById("showEmoji").checked=true;
 </script>
 </body>
 </html>
