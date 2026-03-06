@@ -3,522 +3,434 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✨ Nano AI Chat - Premium</title>
-<meta name="description" content="Professional AI Chat Application">
-<meta name="theme-color" content="#2563eb">
+<title>Nano AI Chat 1.3.1v</title>
 
-<!-- ============================================
-     🔥 FIREBASE SDK
-     ============================================ -->
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
-<!-- ============================================
-     🎨 GOOGLE FONTS
-     ============================================ -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-<!-- ============================================
-     💎 CUSTOM STYLES
-     ============================================ -->
 <style>
-/* --- CSS VARIABLES --- */
-:root {
-    --primary: #2563eb; --primary-dark: #1e40af; --primary-light: #3b82f6;
-    --secondary: #64748b; --success: #22c55e; --danger: #ef4444; --warning: #f59e0b;
-    --bg-primary: #0f172a; --bg-secondary: #111827; --bg-tertiary: #1f2937; --bg-card: #1e293b;
-    --text-primary: #f8fafc; --text-secondary: #cbd5e1; --text-muted: #94a3b8;
-    --border-color: #334155; --shadow-lg: 0 10px 15px rgba(0,0,0,0.5);
-    --radius-md: 10px; --radius-lg: 14px; --radius-xl: 20px;
-    --transition: all 0.2s ease;
-}
-[data-theme="light"] {
-    --bg-primary: #f8fafc; --bg-secondary: #ffffff; --bg-tertiary: #f1f5f9; --bg-card: #e2e8f0;
-    --text-primary: #0f172a; --text-secondary: #334155; --text-muted: #64748b;
-    --border-color: #cbd5e1;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
+body{display:flex;height:100vh;background:#0f172a;color:white;overflow:hidden;}
 
-/* --- RESET & BASE --- */
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;background:var(--bg-primary);color:var(--text-primary);height:100vh;overflow:hidden;line-height:1.6;}
-::-webkit-scrollbar{width:8px;height:8px;}
-::-webkit-scrollbar-track{background:var(--bg-secondary);}
-::-webkit-scrollbar-thumb{background:var(--primary);border-radius:4px;}
+/* SIDEBAR */
+.sidebar{width:280px;background:#111827;display:flex;flex-direction:column;padding:20px;border-right:1px solid #1f2937;}
+.logo{display:flex;align-items:center;margin-bottom:20px;}
+.logo img{height:50px;width:50px;object-fit:contain;border-radius:12px;margin-right:10px;}
+.logo span{font-size:22px;font-weight:bold;}
+.new-chat{padding:12px;background:#2563eb;border:none;color:white;border-radius:14px;cursor:pointer;margin-bottom:15px;font-weight:bold;transition:0.2s;}
+.new-chat:hover{background:#1e40af;}
+.chat-list{flex:1;overflow-y:auto;}
+.chat-item{padding:10px;background:#1f2937;border-radius:12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:0.2s;}
+.chat-item:hover{background:#374151;}
+.chat-item.active{background:#2563eb;}
+.chat-actions button{background:none;border:none;color:#aaa;cursor:pointer;font-size:16px;margin-left:5px;transition:0.2s;}
+.chat-actions button:hover{color:white;}
 
-/* --- LOGIN SCREEN --- */
-#loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,var(--bg-primary),#1e1b4b);display:flex;justify-content:center;align-items:center;z-index:9999;}
-.login-box{background:var(--bg-secondary);padding:40px;border-radius:var(--radius-xl);width:100%;max-width:400px;box-shadow:var(--shadow-lg);border:1px solid var(--border-color);}
-.login-header{text-align:center;margin-bottom:30px;}
-.login-logo{font-size:50px;margin-bottom:10px;display:block;}
-.login-box h2{font-size:24px;color:var(--primary);margin-bottom:5px;}
-.login-box p{color:var(--text-muted);font-size:14px;}
-.form-group{margin-bottom:15px;position:relative;}
-.form-input{width:100%;padding:12px 12px 12px 40px;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:var(--radius-md);color:var(--text-primary);outline:none;transition:var(--transition);}
-.form-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,0.2);}
-.form-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);}
-.btn{width:100%;padding:12px;border:none;border-radius:var(--radius-md);font-weight:600;cursor:pointer;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;}
-.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:white;}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(37,99,235,0.4);}
-.btn-secondary{background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border-color);}
-.btn-secondary:hover{background:var(--border-color);color:var(--text-primary);}
-.login-error{color:var(--danger);font-size:13px;text-align:center;margin-top:10px;display:none;}
-
-/* --- MAINTENANCE --- */
-#maintenanceScreen{position:fixed;inset:0;background:var(--bg-primary);display:none;justify-content:center;align-items:center;z-index:9998;text-align:center;}
-.maintenance-icon{font-size:80px;margin-bottom:20px;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
-
-/* --- APP LAYOUT --- */
-.app-container{display:flex;height:100vh;}
-.app-container.hidden{display:none;}
-
-/* --- SIDEBAR --- */
-.sidebar{width:320px;background:var(--bg-secondary);border-right:1px solid var(--border-color);display:flex;flex-direction:column;}
-.sidebar-header{padding:20px;border-bottom:1px solid var(--border-color);}
-.logo-area{display:flex;align-items:center;gap:10px;margin-bottom:15px;}
-.logo-img{width:40px;height:40px;border-radius:8px;object-fit:contain;}
-.logo-text{font-size:20px;font-weight:700;color:var(--primary);}
-.btn-new-chat{width:100%;padding:10px;background:var(--primary);color:white;border:none;border-radius:var(--radius-md);cursor:pointer;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;}
-.chat-list{flex:1;overflow-y:auto;padding:10px;}
-.chat-item{padding:12px;background:var(--bg-tertiary);border-radius:var(--radius-md);margin-bottom:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:var(--transition);}
-.chat-item:hover{background:var(--bg-card);}
-.chat-item.active{background:rgba(37,99,235,0.2);border:1px solid var(--primary);}
-.chat-item-title{flex:1;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.chat-actions{display:flex;gap:5px;opacity:0;transition:var(--transition);}
-.chat-item:hover .chat-actions{opacity:1;}
-.action-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;}
-.action-btn:hover{color:var(--danger);}
-
-/* --- MAIN CONTENT --- */
+/* MAIN */
 .main{flex:1;display:flex;flex-direction:column;}
-.topbar{height:60px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);padding:0 20px;display:flex;justify-content:space-between;align-items:center;}
-.topbar-left{display:flex;align-items:center;gap:10px;}
-.plan-badge{padding:6px 12px;background:var(--bg-tertiary);border-radius:20px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;}
-.icon-btn{width:36px;height:36px;border:none;background:var(--bg-tertiary);color:var(--text-secondary);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:var(--transition);}
-.icon-btn:hover{background:var(--primary);color:white;}
-.profile-btn{padding:8px 16px;background:var(--primary);color:white;border:none;border-radius:20px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:600;}
-.dropdown{position:absolute;top:50px;right:20px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-md);width:200px;display:none;flex-direction:column;box-shadow:var(--shadow-lg);z-index:100;}
-.dropdown.show{display:flex;}
-.dropdown-item{padding:10px 15px;border:none;background:none;color:var(--text-secondary);cursor:pointer;text-align:left;width:100%;display:flex;align-items:center;gap:8px;}
-.dropdown-item:hover{background:var(--bg-tertiary);color:var(--text-primary);}
-.dropdown-divider{height:1px;background:var(--border-color);margin:5px 0;}
 
-/* --- CHAT AREA --- */
-.chat-area{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:15px;}
-.welcome-msg{text-align:center;color:var(--text-muted);margin-top:50px;}
-.welcome-icon{font-size:60px;margin-bottom:15px;opacity:0.5;}
-.message{max-width:70%;padding:12px 16px;border-radius:var(--radius-lg);position:relative;animation:slideIn 0.3s ease;}
-@keyframes slideIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.message.user{align-self:flex-end;background:var(--primary);color:white;border-bottom-right-radius:4px;}
-.message.ai{align-self:flex-start;background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color);border-bottom-left-radius:4px;}
-.message-header{font-size:11px;opacity:0.7;margin-bottom:4px;display:flex;justify-content:space-between;gap:10px;}
-.edit-btn{position:absolute;top:5px;right:5px;background:rgba(255,255,255,0.2);border:none;color:white;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:12px;display:none;}
-.message.user:hover .edit-btn{display:flex;align-items:center;justify-content:center;}
-.typing-indicator{display:flex;gap:4px;padding:12px 16px;background:var(--bg-tertiary);border-radius:var(--radius-lg);width:fit-content;border:1px solid var(--border-color);}
-.dot{width:6px;height:6px;background:var(--text-muted);border-radius:50%;animation:bounce 1.4s infinite;}
-.dot:nth-child(2){animation-delay:0.2s;}
-.dot:nth-child(3){animation-delay:0.4s;}
-@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+/* TOPBAR */
+.topbar{height:60px;background:#111827;display:flex;justify-content:space-between;align-items:center;padding:0 20px;position:relative;border-bottom:1px solid #1f2937;}
+.profile{cursor:pointer;background:#2563eb;padding:8px 14px;border-radius:20px;user-select:none;}
+.plan-badge{background:#1f2937;padding:6px 12px;border-radius:14px;font-size:13px;}
+.dropdown{position:absolute;top:60px;right:20px;background:#1f2937;padding:10px;border-radius:12px;display:none;width:220px;flex-direction:column;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+.dropdown button,.dropdown select{width:100%;margin:5px 0;padding:8px;background:#374151;color:white;border:none;border-radius:12px;cursor:pointer;text-align:left;}
+.dropdown select{appearance:none;}
+.dropdown button:hover{background:#2563eb;}
 
-/* --- INPUT AREA --- */
-.input-area{background:var(--bg-secondary);border-top:1px solid var(--border-color);padding:15px 20px;}
-.emoji-bar{display:flex;gap:8px;margin-bottom:10px;overflow-x:auto;padding-bottom:5px;}
-.emoji-btn{background:none;border:none;font-size:20px;cursor:pointer;transition:var(--transition);}
-.emoji-btn:hover{transform:scale(1.2);}
+/* CHAT */
+.chat{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+.message{padding:12px;border-radius:14px;word-wrap:break-word;max-width:70%;line-height:1.5;position:relative;}
+.user{text-align:right;color:#60a5fa;background:rgba(96,165,250,0.15);align-self:flex-end;}
+.ai{text-align:left;color:#22c55e;background:rgba(34,197,94,0.15);align-self:flex-start;}
+.ai .dots{display:inline-block;margin-left:5px;}
+.dot{height:6px;width:6px;background:white;border-radius:50%;display:inline-block;margin:0 2px;animation:blink 1s infinite;}
+@keyframes blink{0%,80%,100%{opacity:0.2;}40%{opacity:1;}}
+.edit-btn{position:absolute;top:5px;right:5px;background:#2563eb;border:none;color:white;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:14px;text-align:center;line-height:22px;transition:0.2s;}
+.edit-btn:hover{background:#1e40af;}
+
+/* INPUT */
+.input-area{display:flex;flex-direction:column;padding:15px;background:#111827;border-top:1px solid #1f2937;}
 .input-row{display:flex;gap:10px;}
-.message-input{flex:1;padding:12px;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:var(--radius-md);color:var(--text-primary);outline:none;resize:none;max-height:100px;}
-.send-btn{padding:10px 24px;background:var(--primary);color:white;border:none;border-radius:var(--radius-md);cursor:pointer;font-weight:600;display:flex;align-items:center;gap:8px;}
-.send-btn:hover{background:var(--primary-dark);}
+.input-row input{flex:1;padding:12px;border-radius:14px;border:none;outline:none;background:#1f2937;color:white;}
+.send-btn{padding:10px 22px;background:#2563eb;border:none;color:white;border-radius:14px;cursor:pointer;transition:0.2s;font-weight:bold;}
+.send-btn:hover{background:#1e40af;}
+#emojiPanel{display:flex;flex-wrap:wrap;gap:5px;padding:8px 0;}
+#emojiPanel button{background:#1f2937;border:none;border-radius:6px;padding:4px 8px;cursor:pointer;color:white;font-size:18px;transition:0.2s;}
+#emojiPanel button:hover{background:#2563eb;}
 
-/* --- MODALS --- */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);display:none;justify-content:center;align-items:center;z-index:2000;}
-.modal-overlay.active{display:flex;}
-.modal{background:var(--bg-secondary);border-radius:var(--radius-xl);width:90%;max-width:700px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border:1px solid var(--border-color);}
-.modal-header{padding:20px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;}
-.modal-title{font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px;}
-.close-btn{background:var(--danger);color:white;border:none;border-radius:6px;width:30px;height:30px;cursor:pointer;}
-.modal-body{padding:20px;overflow-y:auto;flex:1;}
-.modal-footer{padding:15px 20px;border-top:1px solid var(--border-color);display:flex;justify-content:flex-end;gap:10px;}
-.tabs{display:flex;gap:5px;margin-bottom:20px;border-bottom:1px solid var(--border-color);}
-.tab-btn{padding:8px 16px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-weight:600;border-bottom:2px solid transparent;}
-.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary);}
-.tab-content{display:none;}
-.tab-content.active{display:block;animation:fadeIn 0.3s;}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-.section{margin-bottom:20px;}
-.section-title{font-size:15px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;color:var(--text-secondary);}
-.card{background:var(--bg-tertiary);padding:15px;border-radius:var(--radius-md);border:1px solid var(--border-color);}
-.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
-.stat-box{text-align:center;background:var(--bg-card);padding:15px;border-radius:var(--radius-md);}
-.stat-value{font-size:24px;font-weight:700;color:var(--primary);}
-.stat-label{font-size:12px;color:var(--text-muted);}
-.store-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;}
-.plan-card{background:var(--bg-tertiary);border:2px solid var(--border-color);border-radius:var(--radius-lg);padding:20px;text-align:center;cursor:pointer;transition:var(--transition);}
-.plan-card:hover{transform:translateY(-5px);border-color:var(--primary);}
-.plan-card.featured{border-color:var(--success);background:rgba(34,197,94,0.05);}
-.plan-icon{font-size:40px;margin-bottom:10px;}
-.plan-price{font-size:28px;font-weight:700;color:var(--success);margin:10px 0;}
-.plan-features{list-style:none;text-align:left;margin:15px 0;font-size:13px;color:var(--text-secondary);}
-.plan-features li{padding:5px 0;border-bottom:1px solid var(--border-color);}
-.plan-features li::before{content:"✓ ";color:var(--success);}
+/* LOGIN */
+#loginScreen{position:absolute;inset:0;background:#0f172a;display:flex;justify-content:center;align-items:center;z-index:2000;}
+.login-box{background:#111827;padding:40px;border-radius:12px;width:320px;display:flex;flex-direction:column;align-items:center;box-shadow:0 8px 32px rgba(0,0,0,0.4);}
+.login-box h2{margin-bottom:20px;color:#60a5fa;}
+.login-box input{width:100%;padding:12px;margin-bottom:12px;border:none;border-radius:10px;background:#1f2937;color:white;font-size:14px;}
+.login-box input::placeholder{color:#888;}
+.login-box button{width:100%;padding:12px;border:none;border-radius:10px;background:#2563eb;color:white;cursor:pointer;font-weight:bold;transition:0.2s;font-size:14px;margin-top:5px;}
+.login-box button:hover{background:#1e40af;}
+.login-box button.secondary{background:#1f2937;}
+.login-box button.secondary:hover{background:#374151;}
+.login-error{color:#ef4444;font-size:13px;margin-top:5px;display:none;}
 
-/* --- RESPONSIVE --- */
-@media(max-width:768px){
-    .sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);z-index:1000;transition:var(--transition);}
-    .sidebar.open{transform:translateX(0);}
-    .menu-btn{display:flex!important;}
-    .message{max-width:85%;}
-}
+/* MAINTENANCE */
+#maintenanceScreen{position:absolute;inset:0;background:#0f172a;display:none;justify-content:center;align-items:center;z-index:3000;text-align:center;}
+.maintenance-box{background:#111827;padding:60px;border-radius:16px;max-width:500px;}
+.maintenance-box h1{color:#ef4444;margin-bottom:15px;font-size:28px;}
+.maintenance-box p{color:#aaa;margin-bottom:20px;}
+.maintenance-icon{font-size:64px;margin-bottom:20px;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:1500;backdrop-filter:blur(4px);}
+.modal{background:#111827;border-radius:16px;padding:20px;width:90%;max-width:600px;max-height:85vh;overflow-y:auto;border:1px solid #1f2937;box-shadow:0 8px 32px rgba(0,0,0,0.4);}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #1f2937;}
+.modal-header h2{color:#60a5fa;font-size:18px;}
+.modal-header .close-btn{background:#ef4444;border:none;color:white;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:16px;}
+.modal-header .close-btn:hover{background:#dc2626;}
+.tabs{display:flex;gap:5px;margin-bottom:15px;border-bottom:1px solid #1f2937;padding-bottom:10px;flex-wrap:wrap;}
+.tab-btn{padding:8px 14px;background:#1f2937;border:none;border-radius:8px;color:white;cursor:pointer;transition:0.2s;font-size:13px;}
+.tab-btn:hover{background:#2563eb;}
+.tab-btn.active{background:#2563eb;font-weight:bold;}
+.tab-content{display:none;animation:fadeIn 0.2s;}
+.tab-content.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+.modal-section{margin-bottom:15px;padding:15px;background:#1f2937;border-radius:12px;}
+.modal-section h3{margin-bottom:10px;color:#60a5fa;font-size:15px;}
+.modal-section p{margin:5px 0;color:#aaa;font-size:13px;}
+.modal-section input,.modal-section select,.modal-section textarea{width:100%;padding:10px;margin:5px 0;border:none;border-radius:8px;background:#111827;color:white;font-size:14px;}
+.modal-section textarea{min-height:80px;resize:vertical;}
+.modal-section button{padding:8px 16px;margin:3px;background:#2563eb;border:none;border-radius:8px;color:white;cursor:pointer;transition:0.2s;font-size:13px;}
+.modal-section button:hover{background:#1e40af;}
+.modal-section button.danger{background:#ef4444;}
+.modal-section button.danger:hover{background:#dc2626;}
+.modal-section button.success{background:#22c55e;}
+.modal-section button.success:hover{background:#16a34a;}
+.confirm-modal{max-width:400px;text-align:center;}
+.confirm-modal p{margin:15px 0;color:#aaa;}
+.confirm-actions{display:flex;gap:10px;justify-content:center;margin-top:15px;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.stat-card{background:#111827;padding:12px;border-radius:10px;text-align:center;}
+.stat-card .num{font-size:22px;font-weight:bold;color:#60a5fa;}
+.stat-card .label{font-size:11px;color:#aaa;}
+.profile-preview{text-align:center;padding:15px;background:#111827;border-radius:12px;margin-bottom:15px;}
+.profile-preview .avatar{width:70px;height:70px;background:#2563eb;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 10px;}
+.profile-preview .name{font-size:17px;font-weight:bold;}
+.profile-preview .plan{display:inline-block;padding:4px 10px;background:#1f2937;border-radius:20px;font-size:11px;margin-top:5px;}
+.store-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;}
+.store-card{background:#111827;padding:20px;border-radius:12px;text-align:center;border:2px solid #1f2937;transition:0.2s;}
+.store-card:hover{border-color:#2563eb;transform:translateY(-2px);}
+.store-card.featured{border-color:#22c55e;background:rgba(34,197,94,0.1);}
+.store-card .plan-name{font-size:20px;font-weight:bold;margin-bottom:5px;}
+.store-card .plan-price{font-size:28px;color:#22c55e;margin-bottom:10px;}
+.store-card .plan-price span{font-size:14px;color:#aaa;}
+.store-card .plan-features{list-style:none;margin:15px 0;text-align:left;}
+.store-card .plan-features li{padding:5px 0;color:#aaa;font-size:13px;}
+.store-card .plan-features li::before{content:"✓ ";color:#22c55e;}
+.store-card button{width:100%;margin-top:10px;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-track{background:#111827;}
+::-webkit-scrollbar-thumb{background:#2563eb;border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:#1e40af;}
+@media(max-width:768px){body{flex-direction:column;}.sidebar{width:100%;height:auto;max-height:200px;}.main{height:auto;}}
 </style>
 </head>
 <body>
 
-<!-- ============================================
-     🔐 LOGIN SCREEN
-     ============================================ -->
+<!-- LOGIN SCREEN -->
 <div id="loginScreen">
     <div class="login-box">
-        <div class="login-header">
-            <span class="login-logo">🤖</span>
-            <h2>Nano AI Chat</h2>
-            <p>Willkommen zurück! Melde dich an 🚀</p>
-        </div>
-        <div class="form-group">
-            <input type="text" id="username" class="form-input" placeholder="Benutzername">
-            <span class="form-icon">👤</span>
-        </div>
-        <div class="form-group">
-            <input type="password" id="password" class="form-input" placeholder="Passwort">
-            <span class="form-icon">🔒</span>
-        </div>
+        <h2>Nano AI Chat 1.3.1v</h2>
+        <input type="text" id="username" placeholder="Username" autocomplete="username">
+        <input type="password" id="password" placeholder="Passwort" autocomplete="current-password">
         <div id="loginError" class="login-error"></div>
-        <button class="btn btn-primary" onclick="handleLogin()" style="margin-bottom:10px;">
-            <span>🔐</span> Login
-        </button>
-        <button class="btn btn-secondary" onclick="handleRegister()">
-            <span>✨</span> Registrieren
-        </button>
+        <button type="button" onclick="handleLogin()">Login</button>
+        <button type="button" class="secondary" onclick="handleRegister()">Registrieren</button>
     </div>
 </div>
 
-<!-- ============================================
-     🔧 MAINTENANCE SCREEN
-     ============================================ -->
+<!-- MAINTENANCE SCREEN -->
 <div id="maintenanceScreen">
-    <div>
+    <div class="maintenance-box">
         <div class="maintenance-icon">🔧</div>
-        <h1 style="color:var(--danger);margin-bottom:10px;">Wartungsmodus</h1>
-        <p style="color:var(--text-muted);">Der Server wird gerade gewartet.</p>
-        <p style="color:var(--primary);margin-top:20px;font-size:12px;">Nano AI Team</p>
+        <h1>Wartungsmodus</h1>
+        <p id="maintenanceText">Der Server wird gerade gewartet. Bitte versuche es später erneut.</p>
+        <p style="color:#60a5fa;font-size:12px;">Nano AI Team</p>
     </div>
 </div>
 
-<!-- ============================================
-     📱 MAIN APPLICATION
-     ============================================ -->
-<div class="app-container hidden" id="appContainer">
-    
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo-area">
-                <img src="Nano-AI.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
-                <span class="logo-text">Nano AI</span>
-            </div>
-            <button class="btn-new-chat" onclick="createChat()">
-                <span>➕</span> Neuer Chat
-            </button>
-        </div>
-        <div class="chat-list" id="chatList"></div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main">
-        <!-- Topbar -->
-        <header class="topbar">
-            <div class="topbar-left">
-                <button class="icon-btn menu-btn" onclick="toggleSidebar()" style="display:none;">☰</button>
-                <div id="planBadge" class="plan-badge"><span>🎫</span> Free</div>
-                <button class="icon-btn" onclick="openModal('adminModal')" id="adminBtn" style="display:none;">🛡️</button>
-                <button class="icon-btn" onclick="openModal('storeModal')">🛒</button>
-                <button class="icon-btn" onclick="openModal('settingsModal')">⚙️</button>
-            </div>
-            <div style="position:relative;">
-                <button class="profile-btn" onclick="toggleDropdown()">
-                    <span>👤</span> <span id="profileName">Profil</span>
-                </button>
-                <div class="dropdown" id="dropdown">
-                    <button class="dropdown-item" onclick="openModal('profileModal');toggleDropdown()">👤 Mein Profil</button>
-                    <button class="dropdown-item" onclick="changeLanguage();toggleDropdown()">🌍 Sprache</button>
-                    <div class="dropdown-divider"></div>
-                    <button class="dropdown-item" onclick="handleLogout();toggleDropdown()">🚪 Logout</button>
-                </div>
-            </div>
-        </header>
-
-        <!-- Chat Area -->
-        <div class="chat-area" id="chatArea">
-            <div class="welcome-msg">
-                <div class="welcome-icon">💬</div>
-                <h3>Willkommen bei Nano AI!</h3>
-                <p>Starte einen neuen Chat oder wähle einen bestehenden.</p>
-            </div>
-        </div>
-
-        <!-- Input Area -->
-        <div class="input-area">
-            <div class="emoji-bar" id="emojiBar"></div>
-            <div class="input-row">
-                <textarea class="message-input" id="messageInput" placeholder="Nachricht schreiben..." rows="1"></textarea>
-                <button class="send-btn" onclick="sendMessage()"><span>📤</span> Senden</button>
-            </div>
-        </div>
-    </main>
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="logo">
+        <img src="Nano-AI.png" alt="Nano AI" onerror="this.style.display='none'">
+        <span>Nano AI</span>
+    </div>
+    <button class="new-chat" onclick="createChat()">+ Neuer Chat</button>
+    <div class="chat-list" id="chatList"></div>
 </div>
 
-<!-- ============================================
-     👤 PROFILE MODAL
-     ============================================ -->
-<div class="modal-overlay" id="profileModal">
+<!-- MAIN -->
+<div class="main">
+    <div class="topbar">
+        <div style="display:flex;gap:10px;align-items:center;">
+            <div id="planBadge" class="plan-badge">Free</div>
+            <button id="adminBtn" class="send-btn" style="padding:6px 12px;font-size:13px;display:none;" onclick="openModal('adminModal')">Admin</button>
+            <button class="send-btn" style="padding:6px 12px;font-size:13px;background:#1f2937;" onclick="openModal('storeModal')">Store</button>
+            <button class="send-btn" style="padding:6px 12px;font-size:13px;background:#1f2937;" onclick="openModal('settingsModal')">Einstellungen</button>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+            <div class="profile" onclick="toggleDropdown()" id="profileName">Profil</div>
+            <div class="dropdown" id="dropdown">
+                <button onclick="openModal('profileModal')">Mein Profil</button>
+                <select id="languageSelect" onchange="changeLanguage()">
+                    <option value="de">Deutsch</option>
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <option value="it">Italiano</option>
+                    <option value="ru">Русский</option>
+                    <option value="tr">Türkçe</option>
+                    <option value="pl">Polski</option>
+                    <option value="nl">Nederlands</option>
+                    <option value="pt">Português</option>
+                </select>
+                <button onclick="handleLogout()">Logout</button>
+            </div>
+        </div>
+    </div>
+    <div class="chat" id="chat"></div>
+    <div class="input-area">
+        <div id="emojiPanel"></div>
+        <div class="input-row">
+            <input type="text" id="prompt" placeholder="Nachricht schreiben..." onkeydown="if(event.key==='Enter')sendPrompt()">
+            <button class="send-btn" onclick="sendPrompt()">Senden</button>
+        </div>
+    </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profileModal" class="modal-overlay">
     <div class="modal">
         <div class="modal-header">
-            <div class="modal-title"><span>👤</span> Mein Profil</div>
+            <h2>Mein Profil</h2>
             <button class="close-btn" onclick="closeModal('profileModal')">✕</button>
         </div>
-        <div class="modal-body">
-            <div class="card" style="text-align:center;margin-bottom:20px;">
-                <div style="font-size:50px;margin-bottom:10px;">👤</div>
-                <h3 id="profileNameDisplay">Username</h3>
-                <div class="plan-badge" id="profilePlanBadge" style="display:inline-flex;margin-top:10px;">🎫 Free</div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('profileModal','info')">Info</button>
+            <button class="tab-btn" onclick="switchTab('profileModal','security')">Sicherheit</button>
+            <button class="tab-btn" onclick="switchTab('profileModal','data')">Daten</button>
+        </div>
+        <div id="profile-info" class="tab-content active">
+            <div class="profile-preview">
+                <div class="avatar">👤</div>
+                <div class="name" id="profileNameDisplay">Username</div>
+                <div class="plan" id="profilePlanDisplay">Free</div>
             </div>
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('profile','info')">📊 Info</button>
-                <button class="tab-btn" onclick="switchTab('profile','security')">🔒 Sicherheit</button>
-                <button class="tab-btn" onclick="switchTab('profile','data')">💾 Daten</button>
-            </div>
-            <div id="profile-info" class="tab-content active">
-                <div class="section">
-                    <div class="section-title"><span>📊</span> Statistiken</div>
-                    <div class="stats-grid">
-                        <div class="stat-box"><div class="stat-value" id="statChats">0</div><div class="stat-label">Chats</div></div>
-                        <div class="stat-box"><div class="stat-value" id="statMsgs">0</div><div class="stat-label">Nachrichten</div></div>
-                        <div class="stat-box"><div class="stat-value" id="statLimit">50</div><div class="stat-label">Limit</div></div>
-                        <div class="stat-box"><div class="stat-value" id="statUsed">0</div><div class="stat-label">Verbraucht</div></div>
-                    </div>
-                </div>
-                <div class="section">
-                    <div class="section-title"><span>🎫</span> Plan</div>
-                    <div class="card"><p id="currentPlanInfo">Free - 50 Nachrichten</p></div>
+            <div class="modal-section">
+                <h3>Statistiken</h3>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="num" id="statChats">0</div><div class="label">Chats</div></div>
+                    <div class="stat-card"><div class="num" id="statMsgs">0</div><div class="label">Nachrichten</div></div>
+                    <div class="stat-card"><div class="num" id="statLimit">50</div><div class="label">Limit/Monat</div></div>
+                    <div class="stat-card"><div class="num" id="statUsed">0</div><div class="label">Verbraucht</div></div>
                 </div>
             </div>
-            <div id="profile-security" class="tab-content">
-                <div class="section">
-                    <div class="section-title"><span>🔑</span> Passwort</div>
-                    <input type="password" id="oldPass" class="form-input" placeholder="Altes Passwort" style="margin-bottom:10px;">
-                    <input type="password" id="newPass" class="form-input" placeholder="Neues Passwort" style="margin-bottom:10px;">
-                    <input type="password" id="confirmPass" class="form-input" placeholder="Bestätigen">
-                    <button class="btn btn-primary" onclick="changePassword()" style="margin-top:10px;">💾 Speichern</button>
-                </div>
-                <button class="btn btn-secondary" style="background:var(--danger);color:white;margin-top:10px;" onclick="confirmAction('deleteAccount','Account wirklich löschen?')">🗑️ Account löschen</button>
+            <div class="modal-section">
+                <h3>Aktueller Plan</h3>
+                <p id="currentPlanInfo">Free - 50 Nachrichten/Monat</p>
+                <button onclick="openModal('storeModal')" class="success" style="margin-top:8px;">Plan im Store ändern</button>
             </div>
-            <div id="profile-data" class="tab-content">
-                <button class="btn btn-primary" onclick="exportData()" style="margin-bottom:10px;">📥 Exportieren</button>
-                <button class="btn btn-secondary" style="background:var(--danger);color:white;" onclick="confirmAction('clearData','Alle Daten löschen?')">🗑️ Daten löschen</button>
+        </div>
+        <div id="profile-security" class="tab-content">
+            <div class="modal-section">
+                <h3>Passwort ändern</h3>
+                <input type="password" id="oldPass" placeholder="Altes Passwort">
+                <input type="password" id="newPass" placeholder="Neues Passwort (min. 6 Zeichen)">
+                <input type="password" id="confirmPass" placeholder="Bestätigen">
+                <button onclick="changePassword()" style="margin-top:8px;">Passwort speichern</button>
+            </div>
+            <div class="modal-section">
+                <h3>Account</h3>
+                <button class="danger" onclick="confirmAction('deleteAccount','Willst du deinen Account WIRKLICH löschen?')">Account löschen</button>
+            </div>
+        </div>
+        <div id="profile-data" class="tab-content">
+            <div class="modal-section">
+                <h3>Daten exportieren</h3>
+                <button onclick="exportData()">Exportieren als TXT</button>
+            </div>
+            <div class="modal-section">
+                <h3>Daten löschen</h3>
+                <button class="danger" onclick="confirmAction('clearData','Alle Daten löschen?')">Alle Daten löschen</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ============================================
-     🛒 STORE MODAL
-     ============================================ -->
-<div class="modal-overlay" id="storeModal">
+<!-- STORE MODAL -->
+<div id="storeModal" class="modal-overlay">
     <div class="modal">
         <div class="modal-header">
-            <div class="modal-title"><span>🛒</span> Nano AI Store</div>
+            <h2>Nano AI Store</h2>
             <button class="close-btn" onclick="closeModal('storeModal')">✕</button>
         </div>
-        <div class="modal-body">
-            <div style="text-align:center;margin-bottom:20px;">
-                <h3 id="storeTitle">Wähle deinen Plan</h3>
-                <p id="storeDesc" style="color:var(--text-muted);">Alle Preise: 0€ - Limited! 🎉</p>
-            </div>
+        <div class="modal-section">
+            <h3 id="storeTitle">Wähle deinen Plan</h3>
+            <p id="storeDesc" style="margin-bottom:15px;">Alle Preise sind aktuell 0€ - Limited Offer!</p>
             <div class="store-grid">
-                <div class="plan-card" onclick="selectPlan('free')">
-                    <div class="plan-icon">🆓</div>
+                <div class="store-card">
                     <div class="plan-name">Free</div>
-                    <div class="plan-price">0€<span>/Monat</span></div>
-                    <ul class="plan-features"><li>50 Nachrichten</li><li>Standard Speed</li></ul>
-                    <button class="btn btn-secondary">Auswählen</button>
+                    <div class="plan-price" id="priceFree">0€<span>/Monat</span></div>
+                    <ul class="plan-features">
+                        <li id="feat1">50 Nachrichten/Monat</li>
+                        <li id="feat2">Standard Geschwindigkeit</li>
+                        <li id="feat3">Basis Support</li>
+                    </ul>
+                    <button onclick="selectPlan('free')" class="success">Auswählen</button>
                 </div>
-                <div class="plan-card featured" onclick="selectPlan('ultra')">
-                    <div class="plan-icon">🚀</div>
+                <div class="store-card featured">
                     <div class="plan-name">Ultra</div>
-                    <div class="plan-price">0€<span>/Monat</span></div>
-                    <ul class="plan-features"><li>500 Nachrichten</li><li>Fast Speed</li></ul>
-                    <button class="btn btn-primary">Auswählen</button>
+                    <div class="plan-price" id="priceUltra">0€<span>/Monat</span></div>
+                    <ul class="plan-features">
+                        <li id="feat4">500 Nachrichten/Monat</li>
+                        <li id="feat5">Schnelle Antwort</li>
+                        <li id="feat6">Priority Support</li>
+                    </ul>
+                    <button onclick="selectPlan('ultra')" class="success">Auswählen</button>
                 </div>
-                <div class="plan-card" onclick="selectPlan('nano')">
-                    <div class="plan-icon">👑</div>
+                <div class="store-card">
                     <div class="plan-name">Nano</div>
-                    <div class="plan-price">0€<span>/Monat</span></div>
-                    <ul class="plan-features"><li>Unbegrenzt</li><li>VIP Speed</li></ul>
-                    <button class="btn btn-secondary">Auswählen</button>
+                    <div class="plan-price" id="priceNano">0€<span>/Monat</span></div>
+                    <ul class="plan-features">
+                        <li id="feat7">Unbegrenzte Nachrichten</li>
+                        <li id="feat8">Schnellste Antwort</li>
+                        <li id="feat9">VIP Support</li>
+                    </ul>
+                    <button onclick="selectPlan('nano')" class="success">Auswählen</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ============================================
-     🛡️ ADMIN MODAL
-     ============================================ -->
-<div class="modal-overlay" id="adminModal">
+<!-- ADMIN MODAL -->
+<div id="adminModal" class="modal-overlay">
     <div class="modal">
         <div class="modal-header">
-            <div class="modal-title"><span>🛡️</span> Admin Panel</div>
+            <h2>Admin Panel</h2>
             <button class="close-btn" onclick="closeModal('adminModal')">✕</button>
         </div>
-        <div class="modal-body">
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('admin','users')">👥 Users</button>
-                <button class="tab-btn" onclick="switchTab('admin','tariffs')">🎁 Tarife</button>
-                <button class="tab-btn" onclick="switchTab('admin','stats')">📈 Stats</button>
-                <button class="tab-btn" onclick="switchTab('admin','settings')">⚙️ Settings</button>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('adminModal','users')">Users</button>
+            <button class="tab-btn" onclick="switchTab('adminModal','tariffs')">Tarife</button>
+            <button class="tab-btn" onclick="switchTab('adminModal','stats')">Statistiken</button>
+            <button class="tab-btn" onclick="switchTab('adminModal','settings')">Einstellungen</button>
+        </div>
+        <div id="admin-users" class="tab-content active">
+            <div class="modal-section">
+                <h3>User suchen</h3>
+                <input id="adminUserSearch" placeholder="Username eingeben..." onkeyup="searchUsers()">
+                <div id="adminUserResults" style="margin-top:10px;max-height:200px;overflow-y:auto;"></div>
             </div>
-            <!-- Users Tab -->
-            <div id="admin-users" class="tab-content active">
-                <div class="section">
-                    <div class="section-title"><span>🔍</span> User suchen</div>
-                    <input type="text" id="adminUserSearch" class="form-input" placeholder="Username..." onkeyup="searchUsers()">
-                    <div id="adminUserResults" style="margin-top:10px;max-height:200px;overflow-y:auto;"></div>
-                </div>
-                <div class="section">
-                    <div class="section-title"><span>⚡</span> Aktionen</div>
-                    <div class="card">
-                        <p id="selectedUserInfo" style="color:var(--primary);margin-bottom:10px;font-weight:600;">Kein User ausgewählt</p>
-                        <input type="hidden" id="selectedUser">
-                        <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                            <button class="btn btn-secondary" onclick="banUser()">🚫 Ban</button>
-                            <button class="btn btn-secondary" onclick="unbanUser()">✅ Unban</button>
-                            <button class="btn btn-secondary" onclick="warnUser()">⚠️ Warnung</button>
-                            <button class="btn btn-secondary" onclick="resetUserLimit()">🔄 Reset</button>
-                            <button class="btn btn-secondary" style="background:var(--danger);color:white;" onclick="deleteUser()">🗑️ Delete</button>
-                        </div>
-                    </div>
+            <div class="modal-section">
+                <h3>Aktionen</h3>
+                <p id="selectedUserInfo" style="color:#60a5fa;margin-bottom:10px;font-size:13px;">Kein User ausgewählt</p>
+                <input type="hidden" id="selectedUser">
+                <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                    <button onclick="banUser()">Ban</button>
+                    <button onclick="unbanUser()">Unban</button>
+                    <button onclick="warnUser()">Warnung</button>
+                    <button onclick="resetUserLimit()">Limit reset</button>
+                    <button onclick="deleteUser()" class="danger">Löschen</button>
                 </div>
             </div>
-            <!-- Tariffs Tab -->
-            <div id="admin-tariffs" class="tab-content">
-                <div class="section">
-                    <div class="section-title"><span>🎁</span> Tarif verschenken</div>
-                    <div class="card">
-                        <input type="text" id="giftUser" class="form-input" placeholder="Username" style="margin-bottom:10px;">
-                        <select id="giftTariff" class="form-input" style="margin-bottom:10px;">
-                            <option value="free">Free</option>
-                            <option value="ultra">Ultra</option>
-                            <option value="nano">Nano</option>
-                        </select>
-                        <button class="btn btn-primary" onclick="giftTariff()">✨ Verschenken</button>
-                    </div>
-                </div>
+        </div>
+        <div id="admin-tariffs" class="tab-content">
+            <div class="modal-section">
+                <h3>Tarif verschenken</h3>
+                <input id="giftUser" placeholder="Username">
+                <select id="giftTariff">
+                    <option value="free">Free</option>
+                    <option value="ultra">Ultra (500)</option>
+                    <option value="nano">Nano ()</option>
+                </select>
+                <button onclick="giftTariff()" class="success" style="margin-top:8px;">Verschenken</button>
             </div>
-            <!-- Stats Tab -->
-            <div id="admin-stats" class="tab-content">
+        </div>
+        <div id="admin-stats" class="tab-content">
+            <div class="modal-section">
+                <h3>Server Statistiken</h3>
                 <div class="stats-grid">
-                    <div class="stat-box"><div class="stat-value" id="adminStatUsers">0</div><div class="stat-label">User</div></div>
-                    <div class="stat-box"><div class="stat-value" id="adminStatChats">0</div><div class="stat-label">Chats</div></div>
-                    <div class="stat-box"><div class="stat-value" id="adminStatMsgs">0</div><div class="stat-label">Nachrichten</div></div>
-                    <div class="stat-box"><div class="stat-value" id="adminStatBanned">0</div><div class="stat-label">Gebannt</div></div>
-                </div>
-                <div class="section" style="margin-top:20px;">
-                    <div class="section-title"><span>👑</span> Owner</div>
-                    <div class="card">
-                        <p>👑 Haupt-Owner: <strong>Lobi</strong></p>
-                        <p>🤝 Co-Owner: <strong>Jovi</strong></p>
-                    </div>
+                    <div class="stat-card"><div class="num" id="adminStatUsers">0</div><div class="label">Gesamt-User</div></div>
+                    <div class="stat-card"><div class="num" id="adminStatChats">0</div><div class="label">Gesamt-Chats</div></div>
+                    <div class="stat-card"><div class="num" id="adminStatMsgs">0</div><div class="label">Gesamt-Nachrichten</div></div>
+                    <div class="stat-card"><div class="num" id="adminStatBanned">0</div><div class="label">Gebannte User</div></div>
                 </div>
             </div>
-            <!-- Settings Tab -->
-            <div id="admin-settings" class="tab-content">
-                <div class="section">
-                    <div class="section-title"><span>⚙️</span> Server</div>
-                    <div class="card">
-                        <label style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                            <input type="checkbox" id="maintMode" onchange="toggleMaintenance()" style="width:20px;height:20px;">
-                            <span>Wartungsmodus aktivieren</span>
-                        </label>
-                        <p id="maintStatus" style="color:var(--text-muted);font-size:12px;">Status: 🟢 Deaktiviert</p>
-                        <button class="btn btn-primary" onclick="saveAdminSettings()" style="margin-top:10px;">💾 Speichern</button>
-                    </div>
-                </div>
+            <div class="modal-section">
+                <h3>Owner Info</h3>
+                <p>Haupt-Owner: <strong>Lobi</strong></p>
+                <p>Co-Owner: <strong>Jovi</strong></p>
+            </div>
+        </div>
+        <div id="admin-settings" class="tab-content">
+            <div class="modal-section">
+                <h3>Server-Einstellungen</h3>
+                <label style="display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px;">
+                    <input type="checkbox" id="maintMode" onchange="toggleMaintenance()">
+                    <span id="maintLabel">Wartungsmodus aktivieren</span>
+                </label>
+                <p id="maintStatus" style="color:#aaa;font-size:12px;margin-top:5px;">Status: Deaktiviert</p>
+                <button onclick="saveAdminSettings()" class="success" style="margin-top:8px;">Speichern</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ============================================
-     ⚙️ SETTINGS MODAL
-     ============================================ -->
-<div class="modal-overlay" id="settingsModal">
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" class="modal-overlay">
     <div class="modal">
         <div class="modal-header">
-            <div class="modal-title"><span>⚙️</span> Einstellungen</div>
+            <h2>Einstellungen</h2>
             <button class="close-btn" onclick="closeModal('settingsModal')">✕</button>
         </div>
-        <div class="modal-body">
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('settings','chat')">💬 Chat</button>
-                <button class="tab-btn" onclick="switchTab('settings','design')">🎨 Design</button>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('settingsModal','chat')">Chat</button>
+            <button class="tab-btn" onclick="switchTab('settingsModal','appearance')">Design</button>
+        </div>
+        <div id="settings-chat" class="tab-content active">
+            <div class="modal-section">
+                <h3>Aktuellen Chat</h3>
+                <button onclick="confirmAction('renameChat','Chat umbenennen?')" style="margin-right:5px;">Umbenennen</button>
+                <button onclick="confirmAction('deleteChat','Diesen Chat WIRKLICH löschen?')" class="danger">Löschen</button>
             </div>
-            <div id="settings-chat" class="tab-content active">
-                <div class="section">
-                    <div class="section-title"><span>📝</span> Aktueller Chat</div>
-                    <div style="display:flex;gap:10px;">
-                        <button class="btn btn-secondary" onclick="confirmAction('renameChat','Chat umbenennen?')">✏️ Umbenennen</button>
-                        <button class="btn btn-secondary" style="background:var(--danger);color:white;" onclick="confirmAction('deleteChat','Chat löschen?')">🗑️ Löschen</button>
-                    </div>
-                </div>
-            </div>
-            <div id="settings-design" class="tab-content">
-                <div class="section">
-                    <div class="section-title"><span>🎨</span> Theme</div>
-                    <div style="display:flex;gap:10px;">
-                        <button class="btn btn-secondary" onclick="setTheme('dark')">🌙 Dark</button>
-                        <button class="btn btn-secondary" onclick="setTheme('light')">☀️ Light</button>
-                    </div>
-                </div>
+        </div>
+        <div id="settings-appearance" class="tab-content">
+            <div class="modal-section">
+                <h3>Theme</h3>
+                <button onclick="setTheme('dark')" style="margin-right:5px;">Dark</button>
+                <button onclick="setTheme('light')">Light</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ============================================
-     ⚠️ CONFIRM MODAL
-     ============================================ -->
-<div class="modal-overlay" id="confirmModal">
-    <div class="modal" style="max-width:400px;">
+<!-- CONFIRM MODAL -->
+<div id="confirmModal" class="modal-overlay">
+    <div class="modal confirm-modal">
         <div class="modal-header">
-            <div class="modal-title"><span>⚠️</span> Bestätigen</div>
+            <h2>Bestätigen</h2>
             <button class="close-btn" onclick="closeModal('confirmModal')">✕</button>
         </div>
-        <div class="modal-body" style="text-align:center;">
-            <p id="confirmText" style="margin-bottom:20px;">Möchtest du wirklich fortfahren?</p>
-            <div style="display:flex;gap:10px;">
-                <button class="btn btn-secondary" onclick="cancelConfirm()">Abbrechen</button>
-                <button class="btn btn-secondary" style="background:var(--danger);color:white;" onclick="executeConfirm()">Ja</button>
-            </div>
+        <p id="confirmText">Möchtest du wirklich fortfahren?</p>
+        <div class="confirm-actions">
+            <button onclick="cancelConfirm()" style="background:#1f2937;">Abbrechen</button>
+            <button onclick="executeConfirm()" class="danger">Ja, ausführen</button>
         </div>
     </div>
 </div>
 
-<!-- ============================================
-     📜 JAVASCRIPT CODE
-     ============================================ -->
 <script>
 // ============================================
-// 🔥 FIREBASE CONFIGURATION
+// FIREBASE CONFIGURATION
 // ============================================
 const firebaseConfig = {
     apiKey: "AIzaSyDttFnSozUCFSxeZ_aZUhWsXDtwKHBRQLQ",
@@ -529,57 +441,69 @@ const firebaseConfig = {
     appId: "1:866335330261:web:5395f2b52a3d2f1078f75c",
     measurementId: "G-CFFWWDNJB7"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // ============================================
-// ⚙️ CONFIG & STATE
+// CONFIG
 // ============================================
 const OWNER = "Lobi";
 const COOWNER = "Jovi";
 const API_URL = "https://unexempt-predenial-aryanna.ngrok-free.dev";
+const VERSION = "1.3.1v";
+
+// ============================================
+// STATE
+// ============================================
 let currentUser = null;
 let userData = null;
 let currentChat = null;
 let currentLanguage = localStorage.getItem("nano_language") || "de";
 let confirmCallback = null;
+let settings = {typingEffect:true, showEmoji:true, theme:'dark'};
 let maintenanceMode = false;
-let settings = JSON.parse(localStorage.getItem("nano_settings")) || {theme:'dark'};
 
 const plans = {free:{name:"Free",limit:50}, ultra:{name:"Ultra",limit:500}, nano:{name:"Nano",limit:9999}};
-const emojis = ["😀","😂","😍","😢","😡","👍","👎","❤️","🔥","🎉","✨","🤖","💬","✅","❌","🚀","💡"];
+const emojis = ["😀","😂","😎","😢","😡","👍","👎","❤️","🔥","🎉"];
 
-const langText = {
-    de:{ph:"Nachricht schreiben...",send:"Senden",storeTitle:"Wähle deinen Plan",storeDesc:"Alle Preise: 0€ - Limited! 🎉"},
-    en:{ph:"Write a message...",send:"Send",storeTitle:"Choose your plan",storeDesc:"All prices: 0€ - Limited! 🎉"},
-    fr:{ph:"Écrire un message...",send:"Envoyer",storeTitle:"Choisissez votre plan",storeDesc:"Tous les prix: 0€ - Limité! 🎉"},
-    es:{ph:"Escribe un mensaje...",send:"Enviar",storeTitle:"Elige tu plan",storeDesc:"¡Todos los precios: 0€ - Limitado! 🎉"},
-    it:{ph:"Scrivi un messaggio...",send:"Invia",storeTitle:"Scegli il tuo piano",storeDesc:"Tutti i prezzi: 0€ - Limitato! 🎉"},
-    ru:{ph:"Напишите сообщение...",send:"Отправить",storeTitle:"Выберите план",storeDesc:"Все цены: 0€ - Ограничено! 🎉"},
-    tr:{ph:"Mesaj yaz...",send:"Gönder",storeTitle:"Planınızı seçin",storeDesc:"Tüm fiyatlar: 0€ - Sınırlı! 🎉"},
-    pl:{ph:"Napisz wiadomość...",send:"Wyślij",storeTitle:"Wybierz swój plan",storeDesc:"Wszystkie ceny: 0€ - Limitowane! 🎉"},
-    nl:{ph:"Bericht schrijven...",send:"Verzenden",storeTitle:"Kies je plan",storeDesc:"Alle prijzen: 0€ - Beperkt! 🎉"},
-    pt:{ph:"Escreva uma mensagem...",send:"Enviar",storeTitle:"Escolha seu plano",storeDesc:"Todos os preços: 0€ - Limitado! 🎉"}
+const storeText = {
+    de: {title:"Wähle deinen Plan", desc:"Alle Preise sind aktuell 0€ - Limited Offer!"},
+    en: {title:"Choose your plan", desc:"All prices currently 0€ - Limited Offer!"},
+    fr: {title:"Choisissez votre plan", desc:"Tous les prix actuellement 0€ - Offre limitée!"},
+    es: {title:"Elige tu plan", desc:"¡Todos los precios actualmente 0€ - Oferta limitada!"},
+    it: {title:"Scegli il tuo piano", desc:"Tutti i prezzi attualmente 0€ - Offerta limitata!"},
+    ru: {title:"Выберите план", desc:"Все цены сейчас 0€ - Ограниченное предложение!"},
+    tr: {title:"Planınızı seçin", desc:"Tüm fiyatlar şu anda 0€ - Sınırlı teklif!"},
+    pl: {title:"Wybierz swój plan", desc:"Wszystkie ceny obecnie 0€ - Oferta limitowana!"},
+    nl: {title:"Kies je plan", desc:"Alle prijzen momenteel 0€ - Beperkte aanbieding!"},
+    pt: {title:"Escolha seu plano", desc:"Todos os preços atualmente 0€ - Oferta limitada!"}
 };
 
 // ============================================
-// 🚀 INITIALIZATION
+// INIT
 // ============================================
-window.addEventListener('DOMContentLoaded', async () => {
-    console.log("✅ Nano AI Chat starting...");
-    document.getElementById('username').addEventListener('keypress', e => {if(e.key==='Enter')handleLogin();});
-    document.getElementById('password').addEventListener('keypress', e => {if(e.key==='Enter')handleLogin();});
-    
-    currentUser = localStorage.getItem("nano_currentUser");
-    if(currentUser) await loadUserData();
-    else document.getElementById("loginScreen").style.display = "flex";
-    
-    renderEmojiBar();
-    if(settings.theme === 'light') setTheme('light');
-});
+async function init(){
+    try{
+        await checkMaintenance();
+        currentUser = localStorage.getItem("nano_currentUser");
+        if(currentUser){
+            await loadUserData();
+        } else {
+            document.getElementById("loginScreen").style.display = "flex";
+        }
+        document.getElementById("username")?.addEventListener("keypress", e => {if(e.key==="Enter")handleLogin();});
+        document.getElementById("password")?.addEventListener("keypress", e => {if(e.key==="Enter")handleLogin();});
+        console.log("Nano AI Chat " + VERSION + " initialized");
+    } catch(err){
+        console.error("Init error:", err);
+        showError("Fehler beim Starten.");
+        document.getElementById("loginScreen").style.display = "flex";
+    }
+}
 
 // ============================================
-// 🔥 FIREBASE FUNCTIONS
+// FIREBASE FUNCTIONS
 // ============================================
 async function checkMaintenance(){
     try{
@@ -590,22 +514,34 @@ async function checkMaintenance(){
             document.getElementById("loginScreen").style.display = "none";
             return true;
         }
-    }catch(e){console.log("Maintenance check skipped");}
+    } catch(e){
+        console.log("Maintenance check skipped");
+    }
     return false;
 }
+
 async function getUserData(username){
     const doc = await db.collection("users").doc(username).get();
-    return doc.exists ? doc.data() : null;
+    if(doc.exists) return doc.data();
+    return null;
 }
+
 async function saveUserData(username, data){
     await db.collection("users").doc(username).set(data, {merge: true});
 }
+
 async function createUser(username, password){
     await db.collection("users").doc(username).set({
-        password: password, plan: "free", banned: false, warnings: 0, chats: {}, messages: 0,
+        password: password,
+        plan: "free",
+        banned: false,
+        warnings: 0,
+        chats: {},
+        messages: 0,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 }
+
 async function getAllUsers(){
     const snapshot = await db.collection("users").get();
     const users = {};
@@ -614,297 +550,506 @@ async function getAllUsers(){
 }
 
 // ============================================
-// 🔐 AUTH
+// AUTH
 // ============================================
-function showError(msg){
-    const err = document.getElementById("loginError");
-    err.innerText = msg; err.style.display = "block";
-    setTimeout(()=>{err.style.display="none";}, 3000);
-}
 async function handleRegister(){
-    const u = document.getElementById("username").value.trim();
-    const p = document.getElementById("password").value.trim();
-    if(!u||!p) return showError("❌ Alle Felder ausfüllen");
-    if(u.length<3) return showError("❌ Username zu kurz");
-    if(p.length<6) return showError("❌ Passwort zu kurz");
+    const u = document.getElementById("username")?.value.trim() || "";
+    const p = document.getElementById("password")?.value.trim() || "";
+    if(!u || !p) return showError("Bitte Username und Passwort eingeben");
+    if(u.length < 3) return showError("Username zu kurz (min. 3 Zeichen)");
+    if(p.length < 6) return showError("Passwort zu kurz (min. 6 Zeichen)");
     try{
         const existing = await getUserData(u);
-        if(existing) return showError("❌ Username vergeben");
+        if(existing) return showError("Username bereits vergeben");
         await createUser(u, p);
-        showError("✅ Registriert! Jetzt einloggen.");
+        showError("Registriert! Jetzt einloggen.");
         document.getElementById("password").value = "";
-    }catch(e){showError("❌ Registrierung fehlgeschlagen");}
+    } catch(e){
+        console.error("Register error:", e);
+        showError("Registrierung fehlgeschlagen");
+    }
 }
+
 async function handleLogin(){
-    const u = document.getElementById("username").value.trim();
-    const p = document.getElementById("password").value.trim();
-    if(!u||!p) return showError("❌ Alle Felder ausfüllen");
+    const u = document.getElementById("username")?.value.trim() || "";
+    const p = document.getElementById("password")?.value.trim() || "";
+    if(!u || !p) return showError("Bitte alle Felder ausfüllen");
     try{
-        await checkMaintenance();
-        if(maintenanceMode && u!==OWNER && u!==COOWNER) return showError("❌ Wartungsmodus");
         const data = await getUserData(u);
-        if(!data) return showError("❌ User nicht gefunden");
-        if(data.password !== p) return showError("❌ Falsches Passwort");
-        if(data.banned) return showError("❌ Account gebannt");
-        currentUser = u; userData = data;
+        if(!data) return showError("User nicht gefunden");
+        if(data.password !== p) return showError("Falsches Passwort");
+        if(data.banned) return showError("Account wurde gebannt");
+        currentUser = u;
+        userData = data;
         localStorage.setItem("nano_currentUser", currentUser);
         startApp();
-    }catch(e){showError("❌ Login fehlgeschlagen");}
+    } catch(e){
+        console.error("Login error:", e);
+        showError("Login fehlgeschlagen");
+    }
 }
+
 async function loadUserData(){
     try{
         const data = await getUserData(currentUser);
-        if(data){userData = data; startApp();}
-        else{localStorage.removeItem("nano_currentUser");document.getElementById("loginScreen").style.display = "flex";}
-    }catch(e){document.getElementById("loginScreen").style.display = "flex";}
+        if(data){
+            userData = data;
+            startApp();
+        } else {
+            localStorage.removeItem("nano_currentUser");
+            document.getElementById("loginScreen").style.display = "flex";
+        }
+    } catch(e){
+        console.error("Load error:", e);
+        document.getElementById("loginScreen").style.display = "flex";
+    }
 }
+
 function handleLogout(){
     localStorage.removeItem("nano_currentUser");
-    currentUser = null; userData = null; location.reload();
+    currentUser = null;
+    userData = null;
+    location.reload();
+}
+
+function showError(msg){
+    const err = document.getElementById("loginError");
+    if(err){
+        err.innerText = msg;
+        err.style.display = "block";
+        setTimeout(()=>{err.style.display="none";}, 3000);
+    }
 }
 
 // ============================================
-// 🚀 APP START
+// APP START
 // ============================================
 function startApp(){
     document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("appContainer").classList.remove("hidden");
     document.getElementById("profileName").innerText = currentUser;
     document.getElementById("profileNameDisplay").innerText = currentUser;
     const adminBtn = document.getElementById("adminBtn");
-    if(adminBtn) adminBtn.style.display = (currentUser===OWNER||currentUser===COOWNER) ? "flex" : "none";
-    updatePlan(); updateProfileStats(); renderChatList(); renderMessages(); applyLanguage();
+    if(adminBtn) adminBtn.style.display = (currentUser===OWNER||currentUser===COOWNER) ? "block" : "none";
+    document.getElementById("languageSelect").value = currentLanguage;
+    applyLanguage();
+    updateStoreLanguage();
+    updatePlan();
+    updateProfileStats();
+    renderChats();
+    renderMessages();
+    renderEmojiPanel();
+    if(settings.theme === 'light') setTheme('light');
 }
 
 // ============================================
-// 🎨 UI FUNCTIONS
+// UI FUNCTIONS
 // ============================================
-function openModal(id){document.getElementById(id).classList.add("active");closeModal('dropdown');}
-function closeModal(id){document.getElementById(id).classList.remove("active");}
-function toggleDropdown(){document.getElementById("dropdown").classList.toggle("show");}
-function toggleSidebar(){document.getElementById("sidebar").classList.toggle("open");}
-function switchTab(cat, tab){
-    const modal = cat + "Modal";
-    document.querySelectorAll(`#${modal} .tab-btn`).forEach(b=>b.classList.remove("active"));
-    document.querySelectorAll(`#${modal} .tab-content`).forEach(c=>c.classList.remove("active"));
+function openModal(id){document.getElementById(id).style.display="flex";}
+function closeModal(id){document.getElementById(id).style.display="none";}
+function switchTab(modalId, tabName){
+    const modal = document.getElementById(modalId);
+    if(!modal) return;
+    modal.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+    modal.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
     event.target.classList.add("active");
-    document.getElementById(`${cat}-${tab}`).classList.add("active");
-    if(cat==="profile"&&tab==="info") updateProfileStats();
-    if(cat==="admin"&&tab==="stats") updateAdminStats();
+    const content = document.getElementById(`${modalId.replace('Modal','')}-${tabName}`);
+    if(content) content.classList.add("active");
+    if(modalId==="profileModal" && tabName==="info") updateProfileStats();
+    if(modalId==="adminModal" && tabName==="stats") updateAdminStats();
 }
 function confirmAction(action, text){
     document.getElementById("confirmText").innerText = text;
-    confirmCallback = action; openModal("confirmModal");
+    confirmCallback = action;
+    openModal("confirmModal");
 }
-function cancelConfirm(){closeModal("confirmModal");confirmCallback=null;}
+function cancelConfirm(){closeModal("confirmModal"); confirmCallback=null;}
 function executeConfirm(){
-    const action = confirmCallback; closeModal("confirmModal");
-    if(action==="deleteChat"&&currentChat) deleteChat(currentChat);
-    else if(action==="renameChat"&&currentChat) renameChat(currentChat);
-    else if(action==="deleteAccount"){alert("Account gelöscht");handleLogout();}
-    else if(action==="clearData"){userData.chats={};userData.messages=0;currentChat=null;saveToFirebase();renderChatList();renderMessages();alert("Daten gelöscht");closeModal("profileModal");}
+    const action = confirmCallback;
+    closeModal("confirmModal");
+    if(action==="deleteChat" && currentChat) deleteChat(currentChat);
+    else if(action==="renameChat" && currentChat) renameChat(currentChat);
+    else if(action==="deleteAccount") deleteAccount();
+    else if(action==="clearData") clearUserData();
     confirmCallback = null;
 }
+function toggleDropdown(){
+    const d = document.getElementById("dropdown");
+    if(d) d.style.display = (d.style.display==="flex") ? "none" : "flex";
+}
 
 // ============================================
-// 🌍 LANGUAGE
+// LANGUAGE
 // ============================================
 function changeLanguage(){
-    const langs = Object.keys(langText);
-    const idx = langs.indexOf(currentLanguage);
-    currentLanguage = langs[(idx+1)%langs.length];
+    currentLanguage = document.getElementById("languageSelect").value;
     localStorage.setItem("nano_language", currentLanguage);
     applyLanguage();
+    updateStoreLanguage();
 }
 function applyLanguage(){
-    const t = langText[currentLanguage] || langText.en;
-    document.getElementById("messageInput").placeholder = t.ph;
-    document.querySelector(".send-btn span:last-child").innerText = t.send;
-    document.getElementById("storeTitle").innerText = t.storeTitle;
-    document.getElementById("storeDesc").innerText = t.storeDesc;
+    const ph = {de:"Nachricht schreiben...",en:"Write a message...",fr:"Écrire un message...",es:"Escribe un mensaje...",it:"Scrivi un messaggio...",ru:"Напишите сообщение...",tr:"Mesaj yaz...",pl:"Napisz wiadomość...",nl:"Bericht schrijven...",pt:"Escreva uma mensagem..."};
+    const prompt = document.getElementById("prompt");
+    if(prompt) prompt.placeholder = ph[currentLanguage] || "Write a message...";
+}
+function updateStoreLanguage(){
+    const t = storeText[currentLanguage] || storeText.en;
+    document.getElementById("storeTitle").innerText = t.title;
+    document.getElementById("storeDesc").innerText = t.desc;
 }
 
 // ============================================
-// 💳 PLAN & STORE
+// PLAN & STORE
 // ============================================
 function updatePlan(){
     if(!userData) return;
     const p = userData.plan;
-    document.getElementById("planBadge").innerHTML = `<span>🎫</span> ${plans[p]?.name||"Free"}`;
-    document.getElementById("profilePlanBadge").innerText = `${plans[p]?.name||"Free"}`;
+    const badge = document.getElementById("planBadge");
+    const planDisplay = document.getElementById("profilePlanDisplay");
+    if(badge) badge.innerText = plans[p]?.name || "Free";
+    if(planDisplay) planDisplay.innerText = plans[p]?.name || "Free";
 }
 function updateProfileStats(){
     if(!userData) return;
-    const chats = Object.keys(userData.chats||{}).length;
-    const msgs = Object.values(userData.chats||{}).reduce((s,c)=>s+(c.messages?.length||0),0);
-    document.getElementById("statChats").innerText = chats;
-    document.getElementById("statMsgs").innerText = msgs;
-    document.getElementById("statLimit").innerText = plans[userData.plan]?.limit||50;
-    document.getElementById("statUsed").innerText = userData.messages||0;
-    document.getElementById("currentPlanInfo").innerText = `${plans[userData.plan]?.name} - ${plans[userData.plan]?.limit} Nachrichten`;
+    const chatCount = Object.keys(userData.chats||{}).length;
+    const msgCount = Object.values(userData.chats||{}).reduce((s,c)=>s+(c.messages?.length||0),0);
+    document.getElementById("statChats").innerText = chatCount;
+    document.getElementById("statMsgs").innerText = msgCount;
+    document.getElementById("statLimit").innerText = plans[userData.plan]?.limit || 50;
+    document.getElementById("statUsed").innerText = userData.messages || 0;
+    document.getElementById("currentPlanInfo").innerText = `${plans[userData.plan]?.name} - ${plans[userData.plan]?.limit} Nachrichten/Monat`;
 }
 async function selectPlan(plan){
     if(!currentUser) return;
-    userData.plan = plan; userData.messages = 0;
-    await saveUserData(currentUser, {plan:plan, messages:0});
-    alert(`✅ Plan zu ${plans[plan].name} geändert!`);
-    closeModal("storeModal"); updatePlan(); updateProfileStats();
+    userData.plan = plan;
+    userData.messages = 0;
+    try{
+        await saveUserData(currentUser, {plan:plan, messages:0});
+        alert(`Plan zu ${plans[plan].name} geändert!`);
+        closeModal("storeModal");
+        updatePlan();
+        updateProfileStats();
+    } catch(e){
+        alert("Fehler beim Plan-Wechsel");
+    }
 }
 
 // ============================================
-// 💬 CHAT
+// CHAT
 // ============================================
 function createChat(){
     if(!userData) return;
-    const id = Date.now().toString();
-    userData.chats[id] = {name:"Neuer Chat", messages:[], createdAt:new Date().toISOString()};
-    currentChat = id; saveToFirebase(); renderChatList(); renderMessages();
-    if(window.innerWidth<=768) toggleSidebar();
+    const id = Date.now();
+    userData.chats[id] = {name:"Neuer Chat", messages:[]};
+    currentChat = id;
+    saveToFirebase();
+    renderChats();
+    renderMessages();
 }
-function selectChat(id){currentChat = id; renderChatList(); renderMessages();if(window.innerWidth<=768)toggleSidebar();}
+function selectChat(id){currentChat = id; renderChats(); renderMessages();}
 function renameChat(id){
-    const name = prompt("Neuer Name:", userData.chats[id].name);
-    if(name&&name.trim()){userData.chats[id].name=name.trim();saveToFirebase();renderChatList();}
+    const name = prompt("Neuer Chat-Name:", userData.chats[id].name);
+    if(name && name.trim()){
+        userData.chats[id].name = name.trim();
+        saveToFirebase();
+        renderChats();
+    }
 }
 function deleteChat(id){
     delete userData.chats[id];
-    if(currentChat===id) currentChat = null;
-    saveToFirebase(); renderChatList(); renderMessages();
+    if(currentChat === id) currentChat = null;
+    saveToFirebase();
+    renderChats();
+    renderMessages();
 }
-function renderChatList(){
+function renderChats(){
     const list = document.getElementById("chatList");
-    if(!list||!userData) return; list.innerHTML = "";
-    const chats = userData.chats||{};
-    Object.entries(chats).forEach(([id,chat])=>{
+    if(!list || !userData) return;
+    list.innerHTML = "";
+    Object.entries(userData.chats).forEach(([id,chat])=>{
         const div = document.createElement("div");
-        div.className = `chat-item ${id===currentChat?"active":""}`;
-        div.innerHTML = `
-            <span class="chat-item-title">${chat.name}</span>
-            <div class="chat-actions">
-                <button class="action-btn" onclick="event.stopPropagation();renameChat('${id}')">✏️</button>
-                <button class="action-btn" onclick="event.stopPropagation();confirmAction('deleteChat','Chat löschen?')">🗑️</button>
-            </div>`;
-        div.onclick = () => selectChat(id);
+        div.className = "chat-item" + (id===currentChat ? " active" : "");
+        const title = document.createElement("span");
+        title.innerText = chat.name;
+        title.style.flex = "1";
+        title.style.cursor = "pointer";
+        title.onclick = () => selectChat(id);
+        const actions = document.createElement("div");
+        actions.className = "chat-actions";
+        const ren = document.createElement("button");
+        ren.innerHTML = "✏";
+        ren.onclick = e => {e.stopPropagation(); renameChat(id);};
+        const del = document.createElement("button");
+        del.innerHTML = "🗑";
+        del.onclick = e => {e.stopPropagation(); confirmAction('deleteChat','Chat "'+chat.name+'" löschen?');};
+        actions.append(ren,del);
+        div.append(title,actions);
         list.appendChild(div);
     });
 }
 function renderMessages(){
-    const area = document.getElementById("chatArea");
-    if(!area) return; area.innerHTML = "";
-    if(!currentChat||!userData.chats[currentChat]){
-        area.innerHTML = `<div class="welcome-msg"><div class="welcome-icon">💬</div><h3>Willkommen!</h3></div>`;
-        return;
-    }
-    const msgs = userData.chats[currentChat].messages||[];
-    msgs.forEach((m,i)=>{
+    const chatDiv = document.getElementById("chat");
+    if(!chatDiv || !currentChat || !userData?.chats[currentChat]) return;
+    chatDiv.innerHTML = "";
+    userData.chats[currentChat].messages.forEach((m,index)=>{
         const div = document.createElement("div");
-        div.className = `message ${m.role}`;
-        div.innerHTML = `
-            <div class="message-header"><span>${m.role==="user"?"👤 Du":"🤖 AI"}</span><span>${m.timestamp?new Date(m.timestamp).toLocaleTimeString():''}</span></div>
-            <div>${m.text}</div>
-            ${m.role==="user"?`<button class="edit-btn" onclick="editMessage(${i})">✏️</button>`:''}`;
-        area.appendChild(div);
+        div.className = "message " + (m.role==="ai"?"ai":"user");
+        div.innerText = m.text;
+        if(m.role==="user"){
+            const edit = document.createElement("button");
+            edit.className = "edit-btn";
+            edit.innerHTML = "✏";
+            edit.onclick = () => {
+                const nt = prompt("Bearbeiten:",m.text);
+                if(nt!==null && nt.trim()){
+                    userData.chats[currentChat].messages[index].text = nt.trim();
+                    saveToFirebase();
+                    renderMessages();
+                }
+            };
+            div.appendChild(edit);
+        }
+        chatDiv.appendChild(div);
     });
-    area.scrollTop = area.scrollHeight;
+    chatDiv.scrollTop = chatDiv.scrollHeight;
 }
-function editMessage(i){
-    const newText = prompt("Bearbeiten:", userData.chats[currentChat].messages[i].text);
-    if(newText!==null&&newText.trim()){
-        userData.chats[currentChat].messages[i].text = newText.trim();
-        saveToFirebase(); renderMessages();
-    }
+function typeText(container,text,callback){
+    if(!settings.typingEffect){container.innerText=text;if(callback)callback();return;}
+    container.innerText = "";
+    let i = 0;
+    const int = setInterval(()=>{
+        container.innerText += text.charAt(i);
+        i++;
+        container.scrollIntoView({behavior:"smooth"});
+        if(i>=text.length){clearInterval(int);if(callback)callback();}
+    },20);
 }
-async function sendMessage(){
-    const input = document.getElementById("messageInput");
-    const text = input.value.trim();
-    if(!text||!currentChat||!userData) return;
-    const limit = plans[userData.plan]?.limit||50;
-    if(userData.messages >= limit) return alert(`⚠️ Limit erreicht! (${limit})`);
-    
-    userData.chats[currentChat].messages.push({role:"user",text,timestamp:new Date().toISOString()});
-    userData.messages++; renderMessages(); input.value = "";
-    
-    // Typing Indicator
-    const area = document.getElementById("chatArea");
-    const typing = document.createElement("div");
-    typing.className = "typing-indicator";
-    typing.id = "typing";
-    typing.innerHTML = `<div class="dot"></div><div class="dot"></div><div class="dot"></div>`;
-    area.appendChild(typing);
-    area.scrollTop = area.scrollHeight;
-    
+async function sendPrompt(){
+    const input = document.getElementById("prompt");
+    const text = input?.value.trim() || "";
+    if(!text || !currentChat || !userData) return;
+    const plan = userData.plan;
+    if(userData.messages >= plans[plan].limit) return alert("Limit erreicht!");
+    userData.chats[currentChat].messages.push({role:"user",text});
+    userData.messages++;
+    renderMessages();
+    if(input) input.value = "";
+    const chatDiv = document.getElementById("chat");
+    const botDiv = document.createElement("div");
+    botDiv.className = "message ai";
+    const dots = document.createElement("span");
+    dots.className = "dots";
+    for(let d=0;d<3;d++){const dot=document.createElement("span");dot.className="dot";dots.appendChild(dot);}
+    botDiv.appendChild(dots);
+    chatDiv.appendChild(botDiv);
+    chatDiv.scrollTop = chatDiv.scrollHeight;
     try{
-        const res = await fetch(API_URL, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:text,language:currentLanguage})});
+        const res = await fetch(API_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({prompt:text,language:currentLanguage})});
         const data = await res.json();
-        typing.remove();
-        userData.chats[currentChat].messages.push({role:"ai",text:data.text||"Error",timestamp:new Date().toISOString()});
-        saveToFirebase(); renderMessages();
-    }catch(e){
-        typing.remove();
-        userData.chats[currentChat].messages.push({role:"ai",text:"❌ Server Fehler",timestamp:new Date().toISOString()});
-        saveToFirebase(); renderMessages();
+        if(dots.parentNode) botDiv.removeChild(dots);
+        typeText(botDiv, data.text, ()=>{
+            userData.chats[currentChat].messages.push({role:"ai",text:data.text});
+            saveToFirebase();
+        });
+    } catch(e){
+        botDiv.innerText = "Server-Fehler";
     }
 }
-async function saveToFirebase(){if(currentUser) await saveUserData(currentUser, userData);updateProfileStats();}
+async function saveToFirebase(){
+    if(!currentUser) return;
+    await saveUserData(currentUser, userData);
+}
 
 // ============================================
-// 😊 EMOJI
+// EMOJI
 // ============================================
-function renderEmojiBar(){
-    const bar = document.getElementById("emojiBar");
-    if(!bar) return; bar.innerHTML = "";
+function renderEmojiPanel(){
+    if(!settings.showEmoji) return;
+    const panel = document.getElementById("emojiPanel");
+    if(!panel) return;
+    panel.innerHTML = "";
     emojis.forEach(e=>{
         const btn = document.createElement("button");
-        btn.className = "emoji-btn"; btn.innerText = e;
-        btn.onclick = ()=>{const i=document.getElementById("messageInput");i.value+=e;i.focus();};
-        bar.appendChild(btn);
+        btn.innerText = e;
+        btn.onclick = ()=>{const inp=document.getElementById("prompt");if(inp){inp.value+=e;inp.focus();}};
+        panel.appendChild(btn);
     });
 }
 
 // ============================================
-// 🛡️ ADMIN
+// ADMIN
 // ============================================
 async function searchUsers(){
-    const q = document.getElementById("adminUserSearch").value.toLowerCase();
-    const res = document.getElementById("adminUserResults");
-    res.innerHTML = "";
-    if(!q) return;
-    const all = await getAllUsers();
-    Object.keys(all).filter(u=>u.includes(q)).slice(0,10).forEach(u=>{
-        const btn = document.createElement("button");
-        btn.className = "btn btn-secondary"; btn.style.marginBottom = "5px"; btn.style.justifyContent = "flex-start";
-        btn.innerText = `${u} ${all[u].banned?"🚫":""}`;
-        btn.onclick = ()=>{
-            document.getElementById("selectedUser").value = u;
-            document.getElementById("selectedUserInfo").innerText = `Ausgewählt: ${u} | Plan: ${all[u].plan}`;
-        };
-        res.appendChild(btn);
-    });
+    try{
+        const allUsers = await getAllUsers();
+        const q = document.getElementById("adminUserSearch").value.toLowerCase();
+        const res = document.getElementById("adminUserResults");
+        res.innerHTML = "";
+        Object.keys(allUsers).filter(u=>u.toLowerCase().includes(q)).slice(0,10).forEach(u=>{
+            const btn = document.createElement("button");
+            btn.innerText = u + (allUsers[u].banned ? " 🚫" : "");
+            btn.style.width = "100%";
+            btn.style.margin = "2px 0";
+            btn.style.background = allUsers[u].banned ? "#ef4444" : "#1f2937";
+            btn.style.textAlign = "left";
+            btn.onclick = ()=>{
+                document.getElementById("selectedUser").value = u;
+                document.getElementById("selectedUserInfo").innerText = `Ausgewählt: ${u} | Plan: ${allUsers[u].plan}`;
+            };
+            res.appendChild(btn);
+        });
+    } catch(e){
+        console.error("Search error:", e);
+    }
 }
 async function banUser(){
-    const u = document.getElementById("selectedUser").value;
-    if(!u) return alert("User wählen");
+    const u = document.getElementById("selectedUser")?.value;
+    if(!u) return alert("User auswählen");
     if(u===OWNER||u===COOWNER) return alert("Owner nicht bannbar!");
-    await saveUserData(u, {banned:true}); alert(`${u} gebannt`); searchUsers();
+    await saveUserData(u, {banned:true});
+    alert(`${u} gebannt`);
+    searchUsers();
 }
 async function unbanUser(){
-    const u = document.getElementById("selectedUser").value;
-    if(!u) return alert("User wählen");
-    await saveUserData(u, {banned:false}); alert(`${u} entbannt`); searchUsers();
+    const u = document.getElementById("selectedUser")?.value;
+    if(!u) return alert("User auswählen");
+    await saveUserData(u, {banned:false});
+    alert(`${u} entbannt`);
+    searchUsers();
 }
 async function warnUser(){
-    const u = document.getElementById("selectedUser").value;
-    if(!u) return alert("User wählen");
-    alert(`⚠️ Warnung an ${u} gesendet (Demo)`);
+    const u = document.getElementById("selectedUser")?.value;
+    if(!u) return alert("User auswählen");
+    const currentWarnings = userData.warnings || 0;
+    await saveUserData(u, {warnings: currentWarnings + 1});
+    alert(`${u} wurde verwarnt`);
+    searchUsers();
 }
 async function resetUserLimit(){
-    const u = document.getElementById("selectedUser").value;
-    if(!u) return alert("User wählen");
-    await saveUserData(u, {messages:0}); alert(`Limit für ${u} reset`); searchUsers();
+    const u = document.getElementById("selectedUser")?.value;
+    if(!u) return alert("User auswählen");
+    await saveUserData(u, {messages:0});
+    alert(`Limit für ${u} zurückgesetzt`);
 }
 async function deleteUser(){
-    const u = document.getElementById("selectedUser").value;
-    if(!u) return alert("User wählen");
+    const u = document.getElementById("selectedUser")?.value;
+    if(!u) return alert("User auswählen");
     if(!confirm(`${u} WIRKLICH löschen?`)) return;
     await db.collection("users").doc(u).delete();
-    alert(`${u} gelöscht`); searchUsers
+    alert(`${u} gelöscht`);
+    searchUsers();
+    updateAdminStats();
+}
+async function giftTariff(){
+    const u = document.getElementById("giftUser")?.value.trim();
+    const t = document.getElementById("giftTariff")?.value;
+    if(!u || !users[u]) return alert("User nicht gefunden");
+    if(!plans[t]) return alert("Ungültiger Tarif");
+    await saveUserData(u, {plan:t, messages:0});
+    alert(`${t} an ${u} verschenkt!`);
+    document.getElementById("giftUser").value = "";
+}
+async function updateAdminStats(){
+    try{
+        const allUsers = await getAllUsers();
+        const userCount = Object.keys(allUsers).length;
+        const chatCount = Object.values(allUsers).reduce((s,u)=>s+Object.keys(u.chats||{}).length,0);
+        const msgCount = Object.values(allUsers).reduce((s,u)=>s+(u.messages||0),0);
+        const bannedCount = Object.values(allUsers).filter(u=>u.banned).length;
+        document.getElementById("adminStatUsers").innerText = userCount;
+        document.getElementById("adminStatChats").innerText = chatCount;
+        document.getElementById("adminStatMsgs").innerText = msgCount;
+        document.getElementById("adminStatBanned").innerText = bannedCount;
+    } catch(e){
+        console.error("Stats error:", e);
+    }
+}
+async function toggleMaintenance(){
+    const chk = document.getElementById("maintMode");
+    maintenanceMode = chk.checked;
+    const status = document.getElementById("maintStatus");
+    if(maintenanceMode){
+        status.innerHTML = 'Status: <strong style="color:#ef4444;">Aktiviert</strong>';
+    } else {
+        status.innerHTML = 'Status: <strong style="color:#22c55e;">Deaktiviert</strong>';
+    }
+}
+async function saveAdminSettings(){
+    try{
+        await db.collection("settings").doc("maintenance").set({enabled: maintenanceMode});
+        alert("Einstellungen gespeichert");
+    } catch(e){
+        alert("Nur für Admins");
+    }
+}
+
+// ============================================
+// SETTINGS
+// ============================================
+function setTheme(t){
+    settings.theme = t;
+    if(t==='light'){
+        document.body.style.background = "#f1f5f9";
+        document.body.style.color = "#1e293b";
+    } else {
+        document.body.style.background = "#0f172a";
+        document.body.style.color = "white";
+    }
+}
+function changePassword(){
+    const oldP = document.getElementById("oldPass")?.value || "";
+    const newP = document.getElementById("newPass")?.value || "";
+    const confP = document.getElementById("confirmPass")?.value || "";
+    if(!oldP || !newP || !confP) return alert("Alle Felder ausfüllen");
+    if(userData.password !== oldP) return alert("Altes Passwort falsch");
+    if(newP !== confP) return alert("Passwörter stimmen nicht überein");
+    if(newP.length < 6) return alert("Passwort muss mind. 6 Zeichen haben");
+    userData.password = newP;
+    saveToFirebase();
+    alert("Passwort geändert!");
+    document.getElementById("oldPass").value = "";
+    document.getElementById("newPass").value = "";
+    document.getElementById("confirmPass").value = "";
+}
+function deleteAccount(){
+    if(!confirm("WIRKLICH löschen?")) return;
+    alert("Account gelöscht");
+    handleLogout();
+}
+function clearUserData(){
+    if(!confirm("Alle Daten löschen?")) return;
+    userData.chats = {};
+    userData.messages = 0;
+    currentChat = null;
+    saveToFirebase();
+    renderChats();
+    renderMessages();
+    alert("Daten gelöscht!");
+    closeModal("profileModal");
+}
+function exportData(){
+    let data = `Nano AI Export - ${currentUser}\n${"=".repeat(40)}\n\n`;
+    Object.entries(userData.chats||{}).forEach(([id,c])=>{
+        data += `Chat: ${c.name}\n${"-".repeat(30)}\n`;
+        (c.messages||[]).forEach(m=>{data+=`[${m.role.toUpperCase()}] ${m.text}\n`;});
+        data += "\n";
+    });
+    const blob = new Blob([data],{type:"text/plain"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "nano_export.txt";
+    a.click();
+}
+
+// ============================================
+// INIT ON LOAD
+// ============================================
+window.addEventListener("DOMContentLoaded", init);
+document.addEventListener("click",(e)=>{
+    const dd = document.getElementById("dropdown");
+    const pr = document.querySelector(".profile");
+    if(dd && pr && !dd.contains(e.target) && !pr.contains(e.target)) dd.style.display = "none";
+    document.querySelectorAll(".modal-overlay").forEach(m=>{if(e.target===m)m.style.display="none";});
+});
+</script>
+</body>
+</html>
