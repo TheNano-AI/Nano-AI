@@ -1317,6 +1317,40 @@ document.querySelectorAll('.card, .info-box, .pricing-card, .faq-item').forEach(
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     observer.observe(el);
 });
+   // ============================================
+// PWA INSTALL BUTTON
+// ============================================
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    const installBtn = document.getElementById('installBtn');
+    installBtn.style.display = 'inline-flex';
+
+    installBtn.addEventListener('click', () => {
+        installBtn.style.display = 'none';
+        deferredPrompt.prompt();
+
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('nano.ai installiert');
+            }
+            deferredPrompt = null;
+        });
+    });
+});
+
+// ============================================
+// SERVICE WORKER
+// ============================================
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log('Service Worker aktiviert'));
+}
 
 // ============================================
 // CONSOLE LOG
