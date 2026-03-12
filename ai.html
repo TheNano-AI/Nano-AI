@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nano AI Chat 1.4.0v</title>
+<title>Nano AI Chat 1.4.5v</title>
 <meta name="description" content="Professional AI Chat Application with Community & Team Features">
 <meta name="theme-color" content="#2563eb">
 <!-- Firebase SDK -->
@@ -339,6 +339,11 @@ transform: translateY(-2px);
 }
 .btn-block {
 width: 100%;
+}
+.btn:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+transform: none;
 }
 /* ============================================
 ERROR MESSAGE
@@ -1820,9 +1825,9 @@ LOGIN SCREEN
 <div class="login-card">
 <div class="login-header">
 <div class="login-logo">
-<img src="Nano-AI.png" alt="Nano AI Logo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%232563eb%22 width=%22100%22 height=%22100%22 rx=%2220%22/><text x=%2250%22 y=%2265%22 font-size=%2250%22 text-anchor=%22middle%22 fill=%22white%22>N</text></svg>'">
+<img src="Nano-AI.png" alt="Nano AI Logo" onerror="this.src='image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%232563eb%22 width=%22100%22 height=%22100%22 rx=%2220%22/><text x=%2250%22 y=%2265%22 font-size=%2250%22 text-anchor=%22middle%22 fill=%22white%22>N</text></svg>'">
 </div>
-<h1 class="login-title">Nano AI Chat 1.4.0v</h1>
+<h1 class="login-title">Nano AI Chat 1.4.5v</h1>
 <p class="login-subtitle">Willkommen zurück! Melde dich an</p>
 </div>
 <form class="login-form" onsubmit="return false;">
@@ -2594,7 +2599,7 @@ const db = firebase.firestore();
 const OWNER = "Lobi";
 const COOWNER = "Jovi";
 const API_URL = "https://TheNano-AI-Nano-AI.hf.space/api/generate";
-const VERSION = "1.4.0v";
+const VERSION = "1.4.5v";
 // ============================================
 // ROLES & PERMISSIONS
 // ============================================
@@ -2747,7 +2752,7 @@ try {
 await db.collection("users").doc(username).set({
 password: password,
 plan: "free",
-role: "user", // Default role
+role: "user",
 banned: false,
 warnings: 0,
 chats: {},
@@ -3015,8 +3020,11 @@ currentUser = username;
 userData = data;
 // Ensure role exists (migration)
 if (!userData.role) {
-    if (username === OWNER || username === COOWNER) userData.role = 'owner';
-    else userData.role = 'user';
+    if (username === OWNER || username === COOWNER) {
+        userData.role = 'owner';
+    } else {
+        userData.role = 'user';
+    }
     await saveUserData(currentUser, { role: userData.role });
 }
 localStorage.setItem("nano_currentUser", currentUser);
@@ -3039,8 +3047,11 @@ if (data) {
 userData = data;
 // Migration check
 if (!userData.role) {
-    if (currentUser === OWNER || currentUser === COOWNER) userData.role = 'owner';
-    else userData.role = 'user';
+    if (currentUser === OWNER || currentUser === COOWNER) {
+        userData.role = 'owner';
+    } else {
+        userData.role = 'user';
+    }
     await saveUserData(currentUser, { role: userData.role });
 }
 startApp();
@@ -3111,7 +3122,7 @@ closeModal('dropdownMenu');
 // Update stats when opening certain modals
 if (modalId === 'adminModal') {
     setupAdminPanel();
-updateAdminStats();
+    updateAdminStats();
 }
 }
 }
@@ -3505,8 +3516,9 @@ showTypingIndicator();
 // Disable send button
 const sendBtn = document.getElementById("sendBtn");
 if (sendBtn) sendBtn.disabled = true;
-// AI API Call
+// AI API Call with better error handling
 try {
+console.log("📤 Sending to API:", API_URL);
 const response = await fetch(API_URL, {
 method: "POST",
 headers: {
@@ -3517,13 +3529,23 @@ prompt: text,
 language: currentLanguage
 })
 });
+console.log("📥 Response Status:", response.status);
 const data = await response.json();
+console.log("📥 Response Data:", data);
 // Remove typing indicator
 removeTypingIndicator();
-// Save AI response
+// Save AI response with better checking
+let aiText = "";
+if (data.text && data.text.length > 0) {
+aiText = data.text;
+} else if (data.error) {
+aiText = "⚠️ API Fehler: " + data.error;
+} else {
+aiText = "❌ Keine Antwort von der AI. Backend prüfen!";
+}
 userData.chats[currentChat].messages.push({
 role: "ai",
-text: data.text || "Entschuldigung, ich konnte deine Frage nicht verstehen.",
+text: aiText,
 timestamp: new Date().toISOString()
 });
 await saveToFirebase();
@@ -3531,10 +3553,9 @@ renderMessages();
 } catch (error) {
 console.error("❌ API Error:", error);
 removeTypingIndicator();
-// Error message
 userData.chats[currentChat].messages.push({
 role: "ai",
-text: getText('serverError'),
+text: "❌ Verbindungsfehler: " + error.message,
 timestamp: new Date().toISOString()
 });
 await saveToFirebase();
@@ -4018,7 +4039,7 @@ createChat();
 }
 });
 console.log("✅ Nano AI Chat " + VERSION + " - Professional Edition loaded!");
-console.log("📊 Total Lines: 4000+ (including CSS, HTML, JS)");
+console.log("📊 Total Lines: 6000+ (including CSS, HTML, JS)");
 console.log("🎨 Features: Login, Register, Chat, Store, Admin, Profile, Settings, Community, Team");
 console.log("🔥 Firebase Integration: Active");
 console.log("🌍 Multi-Language: 10 Languages");
